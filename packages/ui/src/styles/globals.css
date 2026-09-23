@@ -361,8 +361,8 @@
     --card-foreground: oklch(0.145 0 0);
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.5 0.134 242.749);
-    --primary-foreground: oklch(0.977 0.013 236.62);
+    --primary: oklch(0.52 0.19 286);
+    --primary-foreground: oklch(0.985 0.01 286);
     --secondary: oklch(0.967 0.001 286.375);
     --secondary-foreground: oklch(0.21 0.006 285.885);
     --muted: oklch(0.97 0 0);
@@ -373,7 +373,7 @@
     --destructive-foreground: oklch(0.985 0 0);
     --border: oklch(0.922 0 0);
     --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
+    --ring: oklch(0.62 0.18 286);
     --chart-1: var(--long);
     --chart-2: var(--short);
     --chart-3: var(--liquidation);
@@ -454,7 +454,7 @@
     --card-foreground: oklch(1 0 0);
     --popover: var(--color-gmx-slate-800);
     --popover-foreground: oklch(1 0 0);
-    --primary: var(--color-gmx-blue-400);
+    --primary: oklch(0.72 0.18 190);
     --primary-foreground: oklch(1 0 0);
     --secondary: var(--color-gmx-slate-700);
     --secondary-foreground: oklch(1 0 0);
@@ -465,7 +465,7 @@
     --destructive-foreground: oklch(1 0 0);
     --border: var(--color-gmx-stroke-primary);
     --input: var(--color-gmx-stroke-primary);
-    --ring: var(--color-gmx-blue-400);
+    --ring: oklch(0.72 0.18 190);
 
     --surface-canvas: var(--color-gmx-slate-900);
     --surface-sunken: var(--color-gmx-slate-950);
@@ -477,7 +477,7 @@
     --text-secondary: var(--color-gmx-slate-400);
     --text-tertiary: var(--color-gmx-slate-500);
     --text-inverse: oklch(1 0 0);
-    --text-link: var(--color-gmx-blue-400);
+    --text-link: oklch(0.78 0.15 190);
 
     --info: var(--color-gmx-blue-400);
     --sidebar-primary: var(--color-gmx-blue-400);

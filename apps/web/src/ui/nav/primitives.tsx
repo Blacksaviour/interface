@@ -33,42 +33,34 @@ export function SiteLogo({ variant = "app" }: SiteLogoProps) {
   const content = (
     <>
       <span className="inline-flex h-[22px] w-[22px] items-center justify-center">
-        <svg viewBox="0 0 24 24" fill="none" className="h-full w-full">
+        <svg viewBox="0 0 24 24" fill="none" className="h-full w-full" aria-hidden="true">
           <path
-            d="M4 6 L12 2 L20 6 L20 14 L12 18 L4 14 Z"
+            d="M4 5.5 12 2l8 3.5v13L12 22l-8-3.5v-13Z"
             stroke="currentColor"
-            strokeWidth="1.5"
+            strokeWidth="1.25"
             fill="currentColor"
             fillOpacity="0.08"
             className="text-primary"
           />
           <path
-            d="M12 2 L12 18"
+            d="M7 8.5h4.2c2.4 0 4 1.2 4 3.2s-1.6 3.2-4 3.2H9.5V19"
             stroke="currentColor"
-            strokeWidth="1.5"
-            className="text-primary"
-          />
-          <path
-            d="M4 6 L20 14"
-            stroke="currentColor"
-            strokeWidth="0.5"
-            opacity="0.5"
-            className="text-primary"
-          />
-          <path
-            d="M20 6 L4 14"
-            stroke="currentColor"
-            strokeWidth="0.5"
-            opacity="0.5"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             className="text-primary"
           />
         </svg>
       </span>
       <span className="font-mono-num text-17 font-medium tracking-[0.02em] text-foreground">
+ ob-031-034-035-032-trading-workspace
+        levee<span className="text-muted-foreground max-[380px]:hidden">.market</span>
+
         so4
         <span className="text-muted-foreground max-[380px]:hidden">
           .market
         </span>
+ main
       </span>
     </>
   )

@@ -103,14 +103,14 @@ export function GalleryPage() {
           <p className="mt-1 text-sm text-muted-foreground">
             Every packages/ui primitive, all variants. See{" "}
             <a
-              href="https://github.com/SO4-Markets/interface/blob/main/DESIGN.md"
+              href="https://github.com/Levee-HQ/interface/blob/main/DESIGN.md"
               className="text-primary underline underline-offset-2"
             >
               DESIGN.md
             </a>{" "}
             and{" "}
             <a
-              href="https://github.com/SO4-Markets/interface/blob/main/packages/ui/CONTRIBUTING.md"
+              href="https://github.com/Levee-HQ/interface/blob/main/packages/ui/CONTRIBUTING.md"
               className="text-primary underline underline-offset-2"
             >
               packages/ui/CONTRIBUTING.md

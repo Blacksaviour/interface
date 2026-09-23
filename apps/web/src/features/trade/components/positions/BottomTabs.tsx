@@ -17,9 +17,11 @@ import { useWalletStore } from "@/features/wallet/store/wallet-store"
 
 type Props = {
   onSelectPosition?: (position: Position) => void
+  value?: "positions" | "orders" | "trades" | "claims"
+  onValueChange?: (value: "positions" | "orders" | "trades" | "claims") => void
 }
 
-export function BottomTabs({ onSelectPosition }: Props) {
+export function BottomTabs({ onSelectPosition, value, onValueChange }: Props) {
   const { data: positions = [] } = usePositions()
   const { data: orders = [] } = useOrders()
   const account = useWalletStore((state) => state.address)
@@ -41,7 +43,7 @@ export function BottomTabs({ onSelectPosition }: Props) {
   }
 
   return (
-    <Tabs defaultValue="positions">
+    <Tabs value={value} defaultValue="positions" onValueChange={(next) => onValueChange?.(next as Props["value"])}>
       <OrderExecutionFrozenBanner visible={hasFrozenOrders(orders)} />
       <TabsList className="border-b border-border bg-transparent px-4">
         <TabsTrigger value="positions">

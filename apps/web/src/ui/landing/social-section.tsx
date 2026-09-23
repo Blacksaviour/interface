@@ -11,7 +11,7 @@ const SOCIAL_STATS = [
   { name: "Discord", value: "-", href: "https://discord.gg/so4market" },
   { name: "X", value: "-", href: "https://twitter.com/so4market" },
   { name: "Telegram", value: "-", href: "https://t.me/so4market" },
-  { name: "GitHub", value: "Join", href: "https://github.com/SO4-Markets/interface" },
+  { name: "GitHub", value: "Join", href: "https://github.com/Levee-HQ/interface" },
 ]
 
 // GMX's referral-terms/media-kit/terms pages don't exist for SO4 yet — no

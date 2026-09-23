@@ -5,23 +5,51 @@ export type MarketItem = {
   name: string // e.g. "BTC/USD"
 }
 
+const FAVORITES_KEY = "so4-market-favorites-v1"
+
+function loadFavorites(network: string): Array<string> {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(`${FAVORITES_KEY}:${network}`) ?? "null") as unknown
+    const values = Array.isArray(parsed) ? parsed : parsed && typeof parsed === "object" && "markets" in parsed ? parsed.markets : []
+    return Array.isArray(values) ? values.filter((value): value is string => typeof value === "string") : []
+  } catch {
+    return []
+  }
+}
+
 type Props = {
   markets: Array<MarketItem>
   activeMarketId?: string
   onSelect: (marketId: string) => void
+  network?: string
 }
 
-export function MarketSelector({ markets, activeMarketId, onSelect }: Props) {
+export function MarketSelector({ markets, activeMarketId, onSelect, network = "stellar-mainnet" }: Props) {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState("")
+  const [favorites, setFavorites] = useState<Array<string>>(() => loadFavorites(network))
   const containerRef = useRef<HTMLDivElement>(null)
 
   const activeMarket = markets.find((m) => m.id === activeMarketId)
+  const availableIds = new Set(markets.map((market) => market.id))
+  const validFavorites = favorites.filter((id) => availableIds.has(id))
+
+  useEffect(() => setFavorites(loadFavorites(network)), [network])
 
   const filtered =
     query.trim() === ""
-      ? markets
+      ? [...markets].sort((a, b) => Number(validFavorites.includes(b.id)) - Number(validFavorites.includes(a.id)))
       : markets.filter((m) => m.name.toLowerCase().includes(query.toLowerCase()))
+
+  function toggleFavorite(id: string) {
+    const next = favorites.includes(id) ? favorites.filter((value) => value !== id) : [...favorites, id]
+    setFavorites(next)
+    try {
+      localStorage.setItem(`${FAVORITES_KEY}:${network}`, JSON.stringify({ version: 1, markets: next }))
+    } catch {
+      // Preferences are optional and must never block market selection.
+    }
+  }
 
   useEffect(() => {
     if (!open) return
@@ -86,19 +114,28 @@ export function MarketSelector({ markets, activeMarketId, onSelect }: Props) {
               </p>
             ) : (
               filtered.map((market) => (
-                <button
-                  key={market.id}
-                  onClick={() => {
-                    onSelect(market.id)
-                    setOpen(false)
-                    setQuery("")
-                  }}
-                  className={`flex w-full rounded px-3 py-2 text-start text-sm transition-colors hover:bg-accent ${
-                    market.id === activeMarketId ? "bg-accent/60 font-medium" : ""
-                  }`}
-                >
-                  {market.name}
-                </button>
+                <div key={market.id} className="flex items-center rounded hover:bg-accent">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onSelect(market.id)
+                      setOpen(false)
+                      setQuery("")
+                    }}
+                    className={`min-w-0 flex-1 px-3 py-2 text-start text-sm ${market.id === activeMarketId ? "font-medium" : ""}`}
+                  >
+                    {market.name}
+                  </button>
+                  <button
+                    type="button"
+                    aria-label={`${validFavorites.includes(market.id) ? "Remove" : "Add"} ${market.name} favorite`}
+                    aria-pressed={validFavorites.includes(market.id)}
+                    onClick={() => toggleFavorite(market.id)}
+                    className="px-3 py-2 text-muted-foreground hover:text-foreground"
+                  >
+                    {validFavorites.includes(market.id) ? "★" : "☆"}
+                  </button>
+                </div>
               ))
             )}
           </div>
