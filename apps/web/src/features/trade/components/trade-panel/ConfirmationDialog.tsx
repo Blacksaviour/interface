@@ -256,7 +256,7 @@ export function ConfirmationDialog({
     <Dialog open={open} onOpenChange={(v: boolean) => !v && onClose()}>
       <DialogContent className="max-h-[calc(100vh-2rem)] w-[min(calc(100vw-2rem),28rem)] max-w-[calc(100vw-2rem)] overflow-y-auto overflow-x-hidden sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="max-w-full pr-8 [overflow-wrap:anywhere]">
+          <DialogTitle className="max-w-full pe-8 [overflow-wrap:anywhere]">
             Confirm {typeLabel} {!tradeFlags.isSwap && formatAddress(toTokenAddress)}
           </DialogTitle>
         </DialogHeader>

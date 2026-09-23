@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from "react"
-import { toast } from "sonner"
+import { toast } from "@workspace/ui/components/toast"
 import { useQueryClient } from "@tanstack/react-query"
 import { FAUCET_TOKENS } from "../data/tokens"
 import { createFaucetClient } from "../lib/clients"

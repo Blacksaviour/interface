@@ -10,19 +10,19 @@
  * hooks, and the heavy child components are mocked for determinism.
  */
 
-import { afterEach, beforeEach, describe, expect, it, mock } from "bun:test"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { cleanup, render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 
 // ── Data sources behind the real useTradeState ───────────────────────────────
-mock.module("../../hooks/useMarkets", () => ({
+vi.mock("../../hooks/useMarkets", () => ({
   useMarkets: () => ({
     markets: [],
     getMarket: () => undefined,
     getMarketsForIndexToken: () => [],
   }),
 }))
-mock.module("../../hooks/useTokenList", () => ({
+vi.mock("../../hooks/useTokenList", () => ({
   useTokenList: () => ({
     tokens: [],
     indexTokens: [],
@@ -32,7 +32,7 @@ mock.module("../../hooks/useTokenList", () => ({
 }))
 
 // ── Price / fee hooks ────────────────────────────────────────────────────────
-mock.module("../../hooks/useTokenPrices", () => ({
+vi.mock("../../hooks/useTokenPrices", () => ({
   useTokenPrices: () => ({
     prices: {},
     isLoading: false,
@@ -41,7 +41,7 @@ mock.module("../../hooks/useTokenPrices", () => ({
     getMidPrice: () => 1,
   }),
 }))
-mock.module("../../hooks/useTradeFees", () => ({
+vi.mock("../../hooks/useTradeFees", () => ({
   useTradeFees: () => ({
     positionFeeUsd: 0,
     priceImpactUsd: 0,
@@ -52,19 +52,20 @@ mock.module("../../hooks/useTradeFees", () => ({
 }))
 
 // ── Wallet balances: USDC balance of 500 (the default collateral token) ──────
-const WALLET_BALANCE = 500
-mock.module("../../../wallet/hooks/useTokenBalances", () => ({
+// Hoisted because the `vi.mock` factory below closes over it.
+const { WALLET_BALANCE } = vi.hoisted(() => ({ WALLET_BALANCE: 500 }))
+vi.mock("../../../wallet/hooks/useTokenBalances", () => ({
   useTokenBalances: () => ({ data: { USDC: WALLET_BALANCE } }),
 }))
 
 // ── Heavy children — irrelevant to input validation, and the dialog must never
 //    submit a real transaction, so both are stubbed out. ──────────────────────
-mock.module("./TradeInfoRows", () => ({ TradeInfoRows: () => null }))
-mock.module("./ConfirmationDialog", () => ({ ConfirmationDialog: () => null }))
+vi.mock("./TradeInfoRows", () => ({ TradeInfoRows: () => null }))
+vi.mock("./ConfirmationDialog", () => ({ ConfirmationDialog: () => null }))
 
 // ── Base UI wrappers — stubbed with pass-throughs (fast, and Base UI's Tabs /
 //    Slider are prohibitively slow under happy-dom). ──────────────────────────
-mock.module("@workspace/ui/components/tabs", () => ({
+vi.mock("@workspace/ui/components/tabs", () => ({
   Tabs: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   TabsList: ({ children }: { children: React.ReactNode }) => (
     <div>{children}</div>
@@ -82,19 +83,30 @@ mock.module("@workspace/ui/components/tabs", () => ({
     // Render only the default (Long) tab's content so a single input exists.
     value === "Long" ? <div>{children}</div> : null,
 }))
-mock.module("@workspace/ui/components/slider", () => ({
+vi.mock("@workspace/ui/components/slider", () => ({
   Slider: () => null,
 }))
-mock.module("@workspace/ui/components/separator", () => ({
+vi.mock("@workspace/ui/components/separator", () => ({
   Separator: () => <hr />,
 }))
-mock.module("@workspace/ui/components/badge", () => ({
+vi.mock("@workspace/ui/components/badge", () => ({
   Badge: ({ children }: { children: React.ReactNode }) => (
     <span>{children}</span>
   ),
 }))
 
 const { TradePanel } = await import("./TradePanel")
+const { useTradeState } = await import("../../hooks/useTradeState")
+
+/**
+ * TradePanel takes the trade controller as a prop. These tests target the real
+ * state machine (its data sources are mocked above), so drive it through the
+ * actual hook rather than a hand-built stub.
+ */
+function TradePanelHarness() {
+  const trade = useTradeState()
+  return <TradePanel trade={trade} />
+}
 
 /** The pay/collateral amount input. */
 function amountInput() {
@@ -119,13 +131,13 @@ afterEach(cleanup)
 
 describe("TradePanel input validation (#226)", () => {
   it("disables submit while no amount is entered", () => {
-    render(<TradePanel />)
+    render(<TradePanelHarness />)
     expect(submitDisabled()).toBe(true)
   })
 
   it("rejects an invalid (negative) amount", async () => {
     const user = userEvent.setup()
-    render(<TradePanel />)
+    render(<TradePanelHarness />)
 
     await user.type(amountInput(), "-5")
 
@@ -135,7 +147,7 @@ describe("TradePanel input validation (#226)", () => {
 
   it("rejects a zero amount", async () => {
     const user = userEvent.setup()
-    render(<TradePanel />)
+    render(<TradePanelHarness />)
 
     await user.type(amountInput(), "0")
 
@@ -145,7 +157,7 @@ describe("TradePanel input validation (#226)", () => {
 
   it("rejects an excessive amount above the wallet balance", async () => {
     const user = userEvent.setup()
-    render(<TradePanel />)
+    render(<TradePanelHarness />)
 
     await user.type(amountInput(), String(WALLET_BALANCE + 1000))
 
@@ -155,7 +167,7 @@ describe("TradePanel input validation (#226)", () => {
 
   it("enables submit for a valid amount within balance", async () => {
     const user = userEvent.setup()
-    render(<TradePanel />)
+    render(<TradePanelHarness />)
 
     await user.type(amountInput(), "100")
 

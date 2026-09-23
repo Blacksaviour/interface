@@ -7,6 +7,14 @@ import { cleanup } from "@testing-library/react"
 
 expect.extend(axeMatchers)
 
+// jsdom implements the layout-free subset of the DOM, so scrollIntoView is
+// absent at runtime even though the DOM lib types declare it as always present
+// — hence the widened type here rather than a direct property check.
+const elementProto = Element.prototype as { scrollIntoView?: () => void }
+if (!elementProto.scrollIntoView) {
+  elementProto.scrollIntoView = () => {}
+}
+
 afterEach(() => {
   cleanup()
 })

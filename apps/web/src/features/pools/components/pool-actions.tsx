@@ -67,7 +67,7 @@ export function PoolActions({
       </div>
 
       {pendingTx ? (
-        <div className="ml-auto max-w-56 rounded-md border border-primary/20 bg-primary/5 p-2 text-left text-11 leading-relaxed text-muted-foreground">
+        <div className="ms-auto max-w-56 rounded-md border border-primary/20 bg-primary/5 p-2 text-start text-11 leading-relaxed text-muted-foreground">
           <p className="font-medium text-foreground">
             {pendingTx.mode === "deposit" ? "Deposit pending" : "Withdrawal pending"}
           </p>

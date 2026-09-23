@@ -1,15 +1,15 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { HttpResponse, http } from "msw"
 import { Account, Networks, TransactionBuilder, nativeToScVal, rpc } from "@stellar/stellar-sdk"
-import { toast } from "sonner"
+import { toast } from "@workspace/ui/components/toast"
+import { FaucetPage } from "./faucet-page"
 import { useWalletStore } from "@/features/wallet/store/wallet-store"
 import { walletKit } from "@/features/wallet/lib/wallet-kit"
 import { server } from "@/test/msw/server"
 import { fakeWalletAddress } from "@/test/fakes/wallet"
-import { FaucetPage } from "./faucet-page"
 
 // ── Seed values ────────────────────────────────────────────────────────────────
 const CLAIM_AMOUNT_RAW = 10_000_000n
@@ -41,7 +41,7 @@ vi.mock("@/features/wallet/hooks/useNetwork", () => ({
 function tryGetFunctionName(txXdr: string): string {
   try {
     const tx = TransactionBuilder.fromXDR(txXdr, Networks.TESTNET)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const op = tx.operations[0] as any
     if (op?.type !== "invokeHostFunction") return ""
     return (op.func.value().functionName() as Buffer).toString("utf-8")
@@ -82,7 +82,7 @@ describe("FaucetPage — claim all success flow (#216)", () => {
     vi.spyOn(rpc.Server.prototype, "sendTransaction").mockResolvedValue({
       status: "PENDING",
       hash: "aBulkClaimTestTransactionHash",
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     } as any)
     vi.spyOn(rpc.Server.prototype, "getTransaction").mockResolvedValue({
       status: "SUCCESS",
@@ -90,11 +90,11 @@ describe("FaucetPage — claim all success flow (#216)", () => {
       latestLedger: 1001,
       latestLedgerCloseTime: 1_700_000_000,
       returnValue: undefined,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     } as any)
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.spyOn(toast, "loading").mockReturnValue("mock-toast-id" as any)
+     
+    vi.spyOn(toast, "loading").mockReturnValue("mock-toast-id")
     vi.spyOn(toast, "success")
 
     server.use(

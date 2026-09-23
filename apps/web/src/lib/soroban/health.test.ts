@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeAll, afterAll, afterEach } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { setupServer } from 'msw/node';
-import { http, HttpResponse } from 'msw';
+import { HttpResponse, http } from 'msw';
 import { getRpcHealth } from './health';
 
 const rpcUrl = import.meta.env.VITE_RPC_URL || 'http://localhost:8000';

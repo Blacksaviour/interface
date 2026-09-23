@@ -17,8 +17,8 @@
  */
 
 import { describe, expect, it } from "vitest"
-import { http, HttpResponse } from "msw"
-import { xdr, Address } from "@stellar/stellar-sdk"
+import { HttpResponse, http } from "msw"
+import { xdr } from "@stellar/stellar-sdk"
 import { server } from "../../../test/msw/server"
 import { queryContractEvents } from "./events"
 
@@ -61,7 +61,7 @@ const I128_VALUE2_XDR = xdr.ScVal.scvI128(
 type RawEventOverrides = {
   id?: string
   contractId?: string
-  topic?: string[]
+  topic?: Array<string>
   value?: string
   ledger?: number
   txHash?: string
@@ -86,7 +86,7 @@ function makeRawEvent(overrides: RawEventOverrides = {}) {
 
 /** Build a JSON-RPC 2.0 getEvents success response. */
 function makeRpcEventsResponse(
-  events: ReturnType<typeof makeRawEvent>[],
+  events: Array<ReturnType<typeof makeRawEvent>>,
   cursor = "0000000012345-0000000001",
   latestLedger = 12345,
 ) {
@@ -137,10 +137,10 @@ describe("queryContractEvents – decoded topics and value", () => {
     const page = await queryContractEvents({ contractId: CONTRACT_ID, startLedger: 1 })
 
     expect(page.events).toHaveLength(1)
-    const event = page.events[0]!
+    const event = page.events[0]
     expect(event.topics).toHaveLength(1)
 
-    const topic = event.topics[0]!
+    const topic = event.topics[0]
     // The SDK parses scvSymbol — switch() returns the type discriminant
     expect(topic.switch().name).toBe("scvSymbol")
     expect(topic.sym().toString()).toBe("transfer")
@@ -155,7 +155,7 @@ describe("queryContractEvents – decoded topics and value", () => {
 
     const page = await queryContractEvents({ contractId: CONTRACT_ID, startLedger: 1 })
 
-    const value = page.events[0]!.value
+    const value = page.events[0].value
     expect(value.switch().name).toBe("scvI128")
     // Low 64 bits hold 1_000_000
     expect(value.i128().lo().toString()).toBe("1000000")
@@ -172,7 +172,7 @@ describe("queryContractEvents – decoded topics and value", () => {
     server.use(getEventsHandler(makeRpcEventsResponse([raw])))
 
     const page = await queryContractEvents({ contractId: CONTRACT_ID, startLedger: 1 })
-    const event = page.events[0]!
+    const event = page.events[0]
 
     expect(event.id).toBe("fixture-event-id")
     expect(event.ledger).toBe(42000)
@@ -192,11 +192,11 @@ describe("queryContractEvents – decoded topics and value", () => {
     )
 
     const page = await queryContractEvents({ contractId: CONTRACT_ID, startLedger: 1 })
-    const { topics } = page.events[0]!
+    const { topics } = page.events[0]
 
     expect(topics).toHaveLength(2)
-    expect(topics[0]!.sym().toString()).toBe("transfer")
-    expect(topics[1]!.sym().toString()).toBe("deposit")
+    expect(topics[0].sym().toString()).toBe("transfer")
+    expect(topics[1].sym().toString()).toBe("deposit")
   })
 })
 
@@ -256,7 +256,7 @@ describe("queryContractEvents – pagination cursor", () => {
 
     // First page — ledger-range mode
     const first = await queryContractEvents({ contractId: CONTRACT_ID, startLedger: 1 })
-    expect(first.events[0]!.id).toBe("event-page1")
+    expect(first.events[0].id).toBe("event-page1")
     expect(first.cursor).toBe(page1Cursor)
 
     // Second page — cursor mode
@@ -264,7 +264,7 @@ describe("queryContractEvents – pagination cursor", () => {
       contractId: CONTRACT_ID,
       cursor: first.cursor,
     })
-    expect(second.events[0]!.id).toBe("event-page2")
+    expect(second.events[0].id).toBe("event-page2")
     expect(second.cursor).toBe("0000000020000-0000000001")
 
     // Confirm the second request carried a cursor param

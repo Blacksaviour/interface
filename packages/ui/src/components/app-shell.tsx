@@ -1,6 +1,7 @@
 import * as React from "react"
 import { cva } from "class-variance-authority"
 
+import { MAIN_CONTENT_ID, SkipLink } from "@workspace/ui/components/skip-link"
 import { cn } from "@workspace/ui/lib/utils"
 import type { VariantProps } from "class-variance-authority"
 
@@ -60,6 +61,25 @@ export interface AppShellProps
    * @default "320"
    */
   maxWidth?: MaxWidthKey
+  /**
+   * Render the skip link as the shell's first focusable element (DS-078).
+   * Turn it off only when the shell is nested inside another one — a demo or a
+   * gallery preview — where a second skip link would duplicate the target id.
+   * @default true
+   */
+  skipLink?: boolean
+  /**
+   * Render the content area as the page's `<main>` landmark. Turn it off when
+   * the page already owns its own `<main>`, since two are invalid.
+   * @default true
+   */
+  landmark?: boolean
+  /**
+   * Id of the content area — the stable target for the skip link and for
+   * post-navigation focus.
+   * @default "main-content"
+   */
+  mainId?: string
 }
 
 function AppShell({
@@ -67,10 +87,15 @@ function AppShell({
   maxWidth = "320",
   navbar,
   banner,
+  skipLink = true,
+  landmark = true,
+  mainId = MAIN_CONTENT_ID,
   className,
   children,
   ...props
 }: AppShellProps) {
+  const Content = landmark ? "main" : "div"
+
   return (
     <div
       data-slot="app-shell"
@@ -78,18 +103,26 @@ function AppShell({
       className={cn(shellVariants({ variant }), className)}
       {...props}
     >
+      {skipLink && <SkipLink targetId={mainId} />}
       {navbar}
       {banner}
-      <div
+      <Content
+        // `tabIndex={-1}` makes the region programmatically focusable — for the
+        // skip link and for focus handoff after client-side navigation —
+        // without adding a tab stop. `outline-none` keeps that programmatic
+        // focus from drawing a ring around the whole page.
+        id={landmark ? mainId : undefined}
+        tabIndex={landmark ? -1 : undefined}
         data-slot="app-shell-content"
         className={cn(
           contentVariants({ variant }),
+          landmark && "outline-none",
           variant === "constrained" && MAX_WIDTH_CLASS[maxWidth],
           variant === "constrained" && "lg:px-8"
         )}
       >
         {children}
-      </div>
+      </Content>
     </div>
   )
 }

@@ -6,15 +6,15 @@
  */
 
 import { useQuery } from "@tanstack/react-query"
+import { queryKeys } from "../lib/query-keys"
 import { useAccountPositions } from "./useAccountPositions"
 import { useTokenPrices } from "./useTokenPrices"
+import type { Position } from "./usePositions"
+import type { PositionInfo } from "@/lib/contracts"
 import { useWalletStore } from "@/features/wallet/store/wallet-store"
 import { INDEXER_CONFIG } from "@/app/config/indexer"
 import { syntheticsReaderClient } from "@/lib/contracts"
 import { fromSorobanAmount } from "@/shared/lib/bignum"
-import { queryKeys } from "../lib/query-keys"
-import type { Position } from "./usePositions"
-import type { PositionInfo } from "@/lib/contracts"
 
 const CHAIN_ID = "stellar-mainnet"
 const USD_DECIMALS = 30
@@ -123,7 +123,7 @@ export function usePositionsWithIndexer() {
   }
   
   // Merge indexed positions with fresh contract data
-  const mergedPositions: Position[] = indexedPositions
+  const mergedPositions: Array<Position> = indexedPositions
     .filter(p => p.status === "open" && parseFloat(p.sizeUsd ?? "0") > 0)
     .map((indexedPos) => {
       const key = `${indexedPos.account}-${indexedPos.market.key}-${indexedPos.collateralToken?.address}-${indexedPos.isLong}`

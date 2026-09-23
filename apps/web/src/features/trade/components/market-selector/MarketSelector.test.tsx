@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event"
 import { MarketSelector } from "./MarketSelector"
 import type { MarketItem } from "./MarketSelector"
 
-const FIXTURE_MARKETS: MarketItem[] = [
+const FIXTURE_MARKETS: Array<MarketItem> = [
   { id: "addr-btc", name: "BTC/USD" },
   { id: "addr-eth", name: "ETH/USD" },
   { id: "addr-xlm", name: "XLM/USD" },

@@ -1,10 +1,8 @@
 import { useState } from "react"
 import { Link } from "@tanstack/react-router"
 import { Button } from "@workspace/ui/components/button"
-import { Card, CardContent } from "@workspace/ui/components/card"
 import { LoadingButton } from "@workspace/ui/components/loading-button"
 import { Stat } from "@workspace/ui/components/stat"
-import { Heading, Text } from "@workspace/ui/components/text"
 import { useUserSO4Stats } from "../../hooks/use-earn-data"
 import { compoundRewards, vestEsSO4 } from "../../lib/earn"
 import { formatToken } from "@/shared/lib/format"
@@ -30,29 +28,6 @@ function SectionCard({
           {children && <div className="pt-2">{children}</div>}
         </div>
         <div className="shrink-0">{action}</div>
-      </div>
-    </div>
-  )
-}
-
-function StatRow({
-  label,
-  value,
-  isLoading,
-}: {
-  label: string
-  value: string
-  isLoading?: boolean
-}) {
-  return (
-    <div className="flex items-center gap-6">
-      <div>
-        <p className="text-10 text-muted-foreground">{label}</p>
-        {isLoading ? (
-          <Skeleton className="mt-0.5 h-4 w-24" />
-        ) : (
-          <p className="text-xs font-medium tabular-nums">{value}</p>
-        )}
       </div>
     </div>
   )

@@ -1,5 +1,6 @@
-import { describe, it, expect } from "vitest"
+import { describe, expect, it } from "vitest"
 import { render, screen } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
 import { axe } from "vitest-axe"
 import { AppShell } from "./app-shell"
 
@@ -53,10 +54,56 @@ describe("AppShell", () => {
     expect(content).toBeTruthy()
   })
 
+  it("renders the content area as the main landmark", () => {
+    render(
+      <AppShell navbar={<nav />}>
+        <h1>Pools</h1>
+      </AppShell>
+    )
+    const main = screen.getByRole("main")
+    expect(main).toHaveAttribute("id", "main-content")
+    // Programmatically focusable for the skip link and post-navigation focus,
+    // without becoming a tab stop.
+    expect(main).toHaveAttribute("tabindex", "-1")
+  })
+
+  it("accepts a custom main id", () => {
+    render(
+      <AppShell navbar={<nav />} mainId="page-content">
+        Content
+      </AppShell>
+    )
+    expect(screen.getByRole("main")).toHaveAttribute("id", "page-content")
+  })
+
+  it("renders the skip link ahead of the navbar", async () => {
+    const user = userEvent.setup()
+    render(
+      <AppShell navbar={<nav><a href="/pools">Pools</a></nav>}>
+        <h1>Pools</h1>
+      </AppShell>
+    )
+
+    await user.tab()
+    expect(
+      screen.getByRole("link", { name: "Skip to main content" })
+    ).toHaveFocus()
+  })
+
+  it("skips the skip link and landmark when nested", () => {
+    render(
+      <AppShell navbar={<nav />} skipLink={false} landmark={false}>
+        Content
+      </AppShell>
+    )
+    expect(screen.queryByRole("link", { name: /skip to main content/i })).toBeNull()
+    expect(screen.queryByRole("main")).toBeNull()
+  })
+
   it("has no accessibility violations", async () => {
     const { container } = render(
       <AppShell navbar={<nav aria-label="Main" />}>
-        <main>Content</main>
+        <h1>Content</h1>
       </AppShell>
     )
     const results = await axe(container)

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { Button } from "@workspace/ui/components/button"
-import { toast } from "sonner"
+import { toast } from "@workspace/ui/components/toast"
 
 import { cn } from "@workspace/ui/lib/utils"
 import { useBalance } from "../hooks/useBalance"
@@ -64,7 +64,7 @@ export function AccountBadge({ address, className, ...props }: AccountBadgeProps
   }
 
   return (
-    <div ref={containerRef} className="relative inline-block text-left">
+    <div ref={containerRef} className="relative inline-block text-start">
       <Button
         {...props}
         type="button"
@@ -79,7 +79,7 @@ export function AccountBadge({ address, className, ...props }: AccountBadgeProps
       </Button>
 
       {open && (
-        <div className="absolute right-0 z-50 mt-2 w-88 min-w-[16rem] rounded-2xl border border-border bg-background p-4 shadow-xl">
+        <div className="absolute inset-inline-end-0 z-50 mt-2 w-88 min-w-[16rem] rounded-2xl border border-border bg-background p-4 shadow-xl">
           <div className="mb-3 rounded-2xl border border-border/70 bg-muted p-3">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">

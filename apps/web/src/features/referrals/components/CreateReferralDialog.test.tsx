@@ -1,10 +1,10 @@
-import { describe, it, expect, afterEach, vi } from "vitest"
+import { afterEach, describe, expect, it, vi } from "vitest"
 import { cleanup, render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 
-vi.mock("@/lib/contracts", () => ({}))
-
 import { CreateReferralDialog } from "./CreateReferralDialog"
+
+vi.mock("@/lib/contracts", () => ({}))
 
 const mockMutateAsync = vi.fn().mockResolvedValue("0x123")
 vi.mock("../hooks/useCreateReferralCodeMutation", () => ({

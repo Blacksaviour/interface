@@ -19,6 +19,24 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import { cleanup, render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 
+// Module-level context that mock Dialog / DialogClose share
+import React from "react"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@workspace/ui/components/dialog"
+import type * as ReactModule from "react"
+// ---------------------------------------------------------------------------
+// Import subjects AFTER the mock is registered
+// ---------------------------------------------------------------------------
+
+import { ConnectButton } from "@/ui/connect-button"
+
 afterEach(() => {
   cleanup()
 })
@@ -38,7 +56,7 @@ const TITLE_ID = "mock-dialog-title"
 const DESC_ID = "mock-dialog-desc"
 
 vi.mock("@workspace/ui/components/dialog", () => {
-  const React = require("react") as typeof import("react")
+  const React = require("react") as typeof ReactModule
 
   function Dialog({
     open,
@@ -191,25 +209,9 @@ vi.mock("@workspace/ui/components/dialog", () => {
     DialogPortal,
   }
 })
-
-// Module-level context that mock Dialog / DialogClose share
-import React from "react"
 const _DialogCtx = React.createContext<((o: boolean) => void) | undefined>(
   undefined
 )
-
-// ---------------------------------------------------------------------------
-// Import subjects AFTER the mock is registered
-// ---------------------------------------------------------------------------
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  DialogClose,
-} from "@workspace/ui/components/dialog"
 
 // ---------------------------------------------------------------------------
 // Helper: controlled dialog wrapper
@@ -453,8 +455,6 @@ vi.mock("@/app/providers", () => ({
     disconnect: mockDisconnect,
   }),
 }))
-
-import { ConnectButton } from "@/ui/connect-button"
 
 describe("ConnectButton (src/ui) – migrated Dialog modal", () => {
   afterEach(() => {

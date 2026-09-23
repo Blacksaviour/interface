@@ -16,7 +16,10 @@ All components are located in `src/components/` and exported through the package
 - **Tooltip** - Contextual information on hover
 - **Sheet** - Side panel component
 - **Skeleton** - Content placeholder loaders
-- **Separator** - Divider component
+- **Separator / Divider** - Rules in `subtle`/`default`/`strong` tones, semantic or decorative, plus a labelled divider (see [DESIGN.md](../../DESIGN.md#separators-and-dividers) for when *not* to use one)
+- **ScrollArea** - Native overflow container with scroll-position edge shadows and themed scrollbars
+- **VisuallyHidden / LiveRegion** - Screen-reader-only content and polite/assertive announcements ([ACCESSIBILITY_PRIMITIVES.md](./ACCESSIBILITY_PRIMITIVES.md))
+- **SkipLink** - Keyboard bypass for global chrome; wired into `AppShell`'s `<main>` target
 - **TokenAvatar** - Token icon with fallback initials
 - **TokenPair** - Overlapping token pair visual
 - **TransactionStatus** - Transaction state indicator with actions

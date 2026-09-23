@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest"
+import { describe, expect, it, vi } from "vitest"
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { PoolsTimeRangeFilter } from "./pools-time-range-filter"
@@ -24,7 +24,7 @@ vi.mock("@workspace/ui/components/tabs", () => ({
     <button
       role="tab"
       data-tab-value={value}
-      aria-selected={String((rest as { "data-state"?: string })["data-state"] === "active")}
+      aria-selected={(rest as { "data-state"?: string })["data-state"] === "active"}
       {...rest}
     >
       {children}

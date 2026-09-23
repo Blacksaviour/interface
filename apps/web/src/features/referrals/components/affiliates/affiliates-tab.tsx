@@ -1,13 +1,9 @@
 import { useState } from "react"
 import { useQueryClient } from "@tanstack/react-query"
-import { Alert, AlertDescription, AlertTitle } from "@workspace/ui/components/alert"
-import { Card, CardContent, CardHeader } from "@workspace/ui/components/card"
-import { Input } from "@workspace/ui/components/input"
-import { LoadingButton } from "@workspace/ui/components/loading-button"
+import { Button } from "@workspace/ui/components/button"
 import { cn } from "@workspace/ui/lib/utils"
 import { NumericText } from "@workspace/ui/components/numeric"
 import { Skeleton } from "@workspace/ui/components/skeleton"
-import { Stat } from "@workspace/ui/components/stat"
 import { EmptyState, LoadingState } from "@workspace/ui/components/states"
 import {
   Table,
@@ -18,7 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table"
-import { Heading, Text } from "@workspace/ui/components/text"
 import { useAffiliateReferrals } from "../../hooks/use-referrals-data"
 import { useReferralCode } from "../../queries/useReferralCode"
 import { useReferralStats } from "../../queries/useReferralStats"
@@ -27,7 +22,6 @@ import { createAffiliateCode, validateReferralCode } from "../../lib/referrals"
 import { TIERS } from "../../data/tiers"
 import { TimePeriodFilter } from "../shared/time-period-filter"
 import { StatChartCard } from "../shared/stat-chart-card"
-import { TierBadge } from "../shared/tier-badge"
 import { TierProgress } from "../shared/tier-progress"
 import type { TimePeriod } from "../../hooks/use-referrals-data"
 import { formatAddress, formatUsd } from "@/shared/lib/format"
@@ -105,8 +99,7 @@ function CreateCodeForm({ onSuccess }: { onSuccess: () => void }) {
             <Button
               type="submit"
               size="sm"
-              tone="muted"
-              weight="medium"
+              variant="secondary"
               render={<label htmlFor="affiliate-code" />}
             >
               {pending ? "Creating…" : "Create"}

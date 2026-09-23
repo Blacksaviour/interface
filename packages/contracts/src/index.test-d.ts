@@ -1,6 +1,8 @@
 import { expectTypeOf, test } from "vitest"
 import {
   i128ToScVal,
+  fromProtocolAmount,
+  toProtocolAmount,
   parseSorobanError,
   ExchangeRouterClient,
   SyntheticsReaderClient,
@@ -23,6 +25,8 @@ test("public SDK exports retain their callable types", () => {
   expectTypeOf(parseSorobanError).parameter(0).toEqualTypeOf<unknown>()
   expectTypeOf(parseSorobanError).returns.toEqualTypeOf<string>()
   expectTypeOf(i128ToScVal).parameter(0).toEqualTypeOf<bigint>()
+  expectTypeOf(toProtocolAmount).returns.toEqualTypeOf<bigint>()
+  expectTypeOf(fromProtocolAmount).returns.toEqualTypeOf<string>()
 })
 
 test("client classes are constructors", () => {

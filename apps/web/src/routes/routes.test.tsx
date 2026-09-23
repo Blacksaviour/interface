@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from "vitest"
+import { afterEach, describe, expect, it, vi } from "vitest"
 import { cleanup, render, screen, waitFor } from "@testing-library/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ThemeProvider } from "@/ui/theme-provider"
@@ -34,7 +34,7 @@ vi.mock("@tanstack/react-router", () => {
     return (opts: Record<string, unknown>) => opts as { component: React.ComponentType }
   }
   function createRootRoute(opts?: Record<string, unknown>) {
-    return (opts ?? {}) as Record<string, unknown>
+    return (opts ?? {})
   }
   return {
     createFileRoute,
@@ -50,6 +50,10 @@ vi.mock("@tanstack/react-router", () => {
       useLoaderData: () => ({}),
       useParams: () => ({}),
     }),
+    // __root now renders the route announcer above <Outlet /> (DS-078)
+    Outlet: () => null,
+    useLocation: (opts?: { select?: (location: { pathname: string }) => unknown }) =>
+      opts?.select ? opts.select({ pathname: "/" }) : { pathname: "/" },
   }
 })
 
@@ -214,7 +218,8 @@ describe("route smoke tests", () => {
   describe("/", () => {
     it("renders the landing page without crashing", async () => {
       const { Route } = await import("./index")
-      render(<Route.component />, { wrapper: createWrapper() })
+      const RouteComponent = Route.options.component!
+      render(<RouteComponent />, { wrapper: createWrapper() })
       await waitFor(() => {
         expect(screen.getByTestId("navbar")).toBeInTheDocument()
       })
@@ -224,7 +229,8 @@ describe("route smoke tests", () => {
   describe("/trade", () => {
     it("renders the trade page without crashing", async () => {
       const { Route } = await import("./trade")
-      render(<Route.component />, { wrapper: createWrapper() })
+      const RouteComponent = Route.options.component!
+      render(<RouteComponent />, { wrapper: createWrapper() })
       await waitFor(() => {
         expect(screen.getByTestId("navbar")).toBeInTheDocument()
       })
@@ -234,7 +240,8 @@ describe("route smoke tests", () => {
   describe("/pools", () => {
     it("renders the pools page with a stable heading", async () => {
       const { Route } = await import("./pools")
-      render(<Route.component />, { wrapper: createWrapper() })
+      const RouteComponent = Route.options.component!
+      render(<RouteComponent />, { wrapper: createWrapper() })
       await screen.findByRole("heading", { name: /^pools$/i, level: 1 })
     })
   })
@@ -242,7 +249,8 @@ describe("route smoke tests", () => {
   describe("/earn", () => {
     it("renders the earn page with a stable heading", async () => {
       const { Route } = await import("./earn")
-      render(<Route.component />, { wrapper: createWrapper() })
+      const RouteComponent = Route.options.component!
+      render(<RouteComponent />, { wrapper: createWrapper() })
       await screen.findByRole("heading", { name: /earn/i })
     })
   })
@@ -250,7 +258,8 @@ describe("route smoke tests", () => {
   describe("/faucet", () => {
     it("renders the faucet page with a stable heading", async () => {
       const { Route } = await import("./faucet")
-      render(<Route.component />, { wrapper: createWrapper() })
+      const RouteComponent = Route.options.component!
+      render(<RouteComponent />, { wrapper: createWrapper() })
       await screen.findByRole("heading", { name: /testnet faucet/i })
     })
   })
@@ -258,7 +267,8 @@ describe("route smoke tests", () => {
   describe("/referrals", () => {
     it("renders the referrals page with a stable heading", async () => {
       const { Route } = await import("./referrals")
-      render(<Route.component />, { wrapper: createWrapper() })
+      const RouteComponent = Route.options.component!
+      render(<RouteComponent />, { wrapper: createWrapper() })
       await screen.findByRole("heading", { name: /referrals/i })
     })
   })

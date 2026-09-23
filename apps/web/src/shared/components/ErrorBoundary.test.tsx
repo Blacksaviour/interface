@@ -1,11 +1,13 @@
-import { describe, it, expect, afterEach, beforeEach, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { cleanup, render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { ErrorBoundary } from "./ErrorBoundary"
 
 afterEach(cleanup)
 
-function Thrower({ message = "boom" }: { message?: string }) {
+// Annotated `never` because a function that only throws otherwise infers
+// `void`, which TypeScript rejects as a JSX component type.
+function Thrower({ message = "boom" }: { message?: string }): never {
   throw new Error(message)
 }
 

@@ -70,7 +70,7 @@ function IconButton({
             size={ICON_BUTTON_SIZE_MAP[size]}
             aria-label={label}
             data-slot="icon-button"
-            className={cn(className)}
+            className={cn("touch-target", className)} // <-- Add
             {...props}
           >
             {icon}
@@ -81,6 +81,7 @@ function IconButton({
     </Tooltip>
   )
 }
+
 
 export { IconButton }
 export type { IconButtonProps, IconButtonTone, IconButtonSize }

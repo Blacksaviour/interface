@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { render, screen } from "@testing-library/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { useWalletStore } from "@/features/wallet/store/wallet-store"
 import { FaucetPage } from "./faucet-page"
+import { useWalletStore } from "@/features/wallet/store/wallet-store"
 
 // ── Module-level mocks ────────────────────────────────────────────────────────
 

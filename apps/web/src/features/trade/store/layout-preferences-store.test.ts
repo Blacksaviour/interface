@@ -1,9 +1,12 @@
 import { describe, it, expect, beforeEach } from "vitest"
 import {
   useLayoutPreferencesStore,
-  CHART_HEIGHT_DEFAULT,
-  CHART_HEIGHT_MIN,
-  CHART_HEIGHT_MAX,
+  CHART_ROW_HEIGHT_DEFAULT,
+  CHART_ROW_HEIGHT_MIN,
+  CHART_ROW_HEIGHT_MAX,
+  BOOK_WIDTH_DEFAULT,
+  BOOK_WIDTH_MIN,
+  BOOK_WIDTH_MAX,
   TRADE_PANEL_WIDTH_DEFAULT,
   TRADE_PANEL_WIDTH_MIN,
   TRADE_PANEL_WIDTH_MAX,
@@ -13,23 +16,33 @@ describe("layout-preferences-store", () => {
   beforeEach(() => {
     localStorage.clear()
     useLayoutPreferencesStore.setState({
-      chartHeight: CHART_HEIGHT_DEFAULT,
+      chartRowHeight: CHART_ROW_HEIGHT_DEFAULT,
+      bookWidth: BOOK_WIDTH_DEFAULT,
       tradePanelWidth: TRADE_PANEL_WIDTH_DEFAULT,
     })
   })
 
   it("has sensible defaults", () => {
     const state = useLayoutPreferencesStore.getState()
-    expect(state.chartHeight).toBe(CHART_HEIGHT_DEFAULT)
+    expect(state.chartRowHeight).toBe(CHART_ROW_HEIGHT_DEFAULT)
+    expect(state.bookWidth).toBe(BOOK_WIDTH_DEFAULT)
     expect(state.tradePanelWidth).toBe(TRADE_PANEL_WIDTH_DEFAULT)
   })
 
-  it("clamps chart height to the min/max bounds", () => {
-    useLayoutPreferencesStore.getState().setChartHeight(CHART_HEIGHT_MIN - 100)
-    expect(useLayoutPreferencesStore.getState().chartHeight).toBe(CHART_HEIGHT_MIN)
+  it("clamps chart row height to the min/max bounds", () => {
+    useLayoutPreferencesStore.getState().setChartRowHeight(CHART_ROW_HEIGHT_MIN - 100)
+    expect(useLayoutPreferencesStore.getState().chartRowHeight).toBe(CHART_ROW_HEIGHT_MIN)
 
-    useLayoutPreferencesStore.getState().setChartHeight(CHART_HEIGHT_MAX + 100)
-    expect(useLayoutPreferencesStore.getState().chartHeight).toBe(CHART_HEIGHT_MAX)
+    useLayoutPreferencesStore.getState().setChartRowHeight(CHART_ROW_HEIGHT_MAX + 100)
+    expect(useLayoutPreferencesStore.getState().chartRowHeight).toBe(CHART_ROW_HEIGHT_MAX)
+  })
+
+  it("clamps book width to the min/max bounds", () => {
+    useLayoutPreferencesStore.getState().setBookWidth(BOOK_WIDTH_MIN - 100)
+    expect(useLayoutPreferencesStore.getState().bookWidth).toBe(BOOK_WIDTH_MIN)
+
+    useLayoutPreferencesStore.getState().setBookWidth(BOOK_WIDTH_MAX + 100)
+    expect(useLayoutPreferencesStore.getState().bookWidth).toBe(BOOK_WIDTH_MAX)
   })
 
   it("clamps trade panel width to the min/max bounds", () => {
@@ -41,17 +54,19 @@ describe("layout-preferences-store", () => {
   })
 
   it("rejects NaN values by falling back to the minimum bound", () => {
-    useLayoutPreferencesStore.getState().setChartHeight(NaN)
-    expect(useLayoutPreferencesStore.getState().chartHeight).toBe(CHART_HEIGHT_MIN)
+    useLayoutPreferencesStore.getState().setChartRowHeight(NaN)
+    expect(useLayoutPreferencesStore.getState().chartRowHeight).toBe(CHART_ROW_HEIGHT_MIN)
   })
 
-  it("resetLayout restores both dimensions to their defaults", () => {
-    useLayoutPreferencesStore.getState().setChartHeight(CHART_HEIGHT_MAX)
+  it("resetLayout restores all dimensions to their defaults", () => {
+    useLayoutPreferencesStore.getState().setChartRowHeight(CHART_ROW_HEIGHT_MAX)
+    useLayoutPreferencesStore.getState().setBookWidth(BOOK_WIDTH_MAX)
     useLayoutPreferencesStore.getState().setTradePanelWidth(TRADE_PANEL_WIDTH_MAX)
     useLayoutPreferencesStore.getState().resetLayout()
 
     const state = useLayoutPreferencesStore.getState()
-    expect(state.chartHeight).toBe(CHART_HEIGHT_DEFAULT)
+    expect(state.chartRowHeight).toBe(CHART_ROW_HEIGHT_DEFAULT)
+    expect(state.bookWidth).toBe(BOOK_WIDTH_DEFAULT)
     expect(state.tradePanelWidth).toBe(TRADE_PANEL_WIDTH_DEFAULT)
   })
 

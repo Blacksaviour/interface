@@ -120,8 +120,76 @@ then review the diffs in `e2e/design-system-visual.spec.ts-snapshots/` in your P
 
 - give reviewers one place to see every variant of a component at once instead of hunting through feature pages for one that happens to use the state you changed
 - act as the fixed, deterministic target for the visual regression suite above
+- provide an **RTL toggle** (top-right corner) that switches the page between left-to-right and right-to-left layout, making directional-CSS regressions visible at a glance
 
 When you add a new component to `packages/ui`, add it to the gallery in the same PR — see [`packages/ui/CONTRIBUTING.md`](./packages/ui/CONTRIBUTING.md) for the full checklist.
+
+## Separators and dividers
+
+Borders are the cheapest way to make a layout look organised and the fastest way to make it look noisy. Linear's calm hierarchy comes from *space* and *surface* doing the grouping, with lines reserved for the few places where a relationship genuinely needs marking. [`packages/ui/src/components/separator.tsx`](./packages/ui/src/components/separator.tsx) (DS-080) exists so those few places look the same everywhere.
+
+**Reach for these first, in order:**
+
+1. **Spacing** — a bigger gap between two groups than within them. This is the default answer for stacked form fields, stat rows, and list items.
+2. **Surface contrast** — `bg-surface-raised` / `bg-card` against `bg-surface-canvas`. A card edge already says "this is one thing", so an internal separator repeating that boundary is redundant.
+3. **A separator** — only when two adjacent blocks are different *kinds* of thing and spacing alone leaves that ambiguous: a panel and its action footer, a menu's items and its destructive item, a table and its summary row.
+
+**Tones.** `subtle` inside an already-grouped surface (card, popover, form), `default` between page or list sections, `strong` for the rare structural cut between regions belonging to different tasks. Anything heavier than `strong` is a sign the layout wants a surface change instead of a line.
+
+**Semantics.** Pass `decorative` whenever the line is purely visual — which is most of the time. Headings, lists, and landmarks usually already carry the structure, and every announced separator is one more thing a screen-reader user listens past. Leave it semantic only when the line is the *only* thing expressing the grouping.
+
+**Labelled dividers.** `<Divider label="or" />` names a break instead of just drawing one — grouped form sections, "or" between auth methods, date breaks in a feed. The rules are decorative and the label is ordinary text, so assistive technology reads the words rather than the geometry. Label contrast comes from `text-text-secondary`, which holds up in light, dark, and high-contrast themes.
+
+Existing page borders were left alone in DS-080; migrate them opportunistically when you're already touching the markup.
+## Right-to-left (RTL) support
+
+### Logical CSS properties
+
+The design system uses **logical CSS properties** instead of physical directional properties wherever the behaviour is semantic (i.e. describes content flow rather than a fixed visual direction):
+
+| Physical | Logical equivalent |
+|---|---|
+| `left` / `right` | `inset-inline-start` / `inset-inline-end` |
+| `margin-left` / `margin-right` | `margin-inline-start` / `margin-inline-end` |
+| `padding-left` / `padding-right` | `padding-inline-start` / `padding-inline-end` |
+| `border-left` / `border-right` | `border-inline-start` / `border-inline-end` |
+| `text-left` / `text-right` | `text-start` / `text-end` |
+| `translate-x` | Use `inset-inline-start` + `translate` or percent-based |
+
+Tailwind v4 provides logical utility classes — `ms-*`, `me-*`, `ps-*`, `pe-*`, `border-s-*`, `border-e-*`, `text-start`, `text-end`, `inset-inline-start-*`, `inset-inline-end-*` — which map to the correct physical side at runtime based on the `dir` attribute.
+
+### Justified physical directions
+
+Some directional properties are intentionally kept physical:
+
+- **Numeric financial values**: columns containing prices, sizes, volumes, APY, and other numbers use `text-right` (not `text-end`) because financial convention requires right-aligned digits in all locales, regardless of script direction.
+- **Chart time flow**: time-series charts (candlesticks, line charts) render left-to-right regardless of page direction, per financial-market convention.
+- **Data-attributed sides**: components that accept a physical `side` prop (e.g. `sheet` with `side="left"` or `side="right"`, tooltip arrow positioning for `data-[side=left]`/`data-[side=right]`) remain physical because they refer to the screen-relative position, not the content-flow direction. The logical `inline-start` / `inline-end` variants are also supported for direction-aware placement.
+
+### DirectionProvider
+
+A `DirectionProvider` (in `apps/web/src/ui/direction-provider.tsx`) persists the chosen direction to `localStorage` under `so4-direction` and sets the `dir` attribute on `<html>`. It wraps the app in the provider tree alongside `ThemeProvider`.
+
+### RTL gallery fixture
+
+The component gallery at `/gallery` includes an RTL/LTR toggle button (top-right corner). Use it during development and review to verify that:
+
+- Dialogs, menus, fields, tabs, breadcrumbs, tables, and navigation remain usable in RTL
+- Leading/trailing icons and controls mirror correctly
+- Focus order follows DOM order and remains logical
+- Numeric financial values preserve readable direction
+
+The visual regression suite (`e2e/design-system-visual.spec.ts`) captures gallery screenshots in both directions across all themes and viewports. Run `bun run test:e2e -- design-system-visual` to verify, or `bun run test:e2e -- design-system-visual --update-snapshots` to update baselines after an intentional change.
+
+## GMX reference palette and landing theme (GF3)
+
+`packages/ui/src/styles/globals.css` carries a namespaced `--color-gmx-*` palette, landing font stacks (`--font-landing-sans` = Archivo, the OFL stand-in for GMX's paid TTHoves; `--font-landing-code` = Space Mono), landing typography/button utilities (`text-heading-1…4`, `text-subheadline`, `text-description`, `btn-landing`), and helpers (`border-hairline`, `scrollbar-hide`, `animate-pause`, `--animate-scroll`). These are **source material for the GrantFox 3 theme revamp**, not tokens for general app use — app components keep using the semantic tokens above; only the dark theme (GF3-001) and the landing route consume the `gmx-*` set. The full GMX token reference, licensing notes, and the GMX→SO4 mapping table live in [`docs/gf_3/001_theme_update.md`](./docs/gf_3/001_theme_update.md); the landing spec in [`docs/gf_3/002_landing_page.md`](./docs/gf_3/002_landing_page.md).
+
+### Dark theme (GF3-001)
+
+`.dark` in `globals.css` had been removed at some point, so toggling to dark mode silently fell back to the light values above. GF3-001 (re)introduces it, this time derived from the GMX reference palette instead of an arbitrary dark scale — surfaces, text roles, `border`/`input`, `primary`/`ring`, and `accent` all resolve to a `--color-gmx-*` value per the mapping table in [`001_theme_update.md` §8.2](./docs/gf_3/001_theme_update.md#82-layer-2--semantic-dark-theme-what-gf3-001-applies). Trading-state colors (`long`/`short`/`liquidation`, `success`/`warning`/`danger`, `neutral`) are not GMX concepts, so their foreground values are untouched — only their `subtle`/`border` fill pairs are re-lightened in `.dark`, because the `:root` pairs were tuned to sit on a white page and read as almost-black on the new slate-800/900 surfaces. `--info` is the one status color that does move, to `--color-gmx-blue-400`, since "informational blue" is the same concept as GMX's brand blue. The light theme (`:root`) is unchanged.
+
+The landing route (`apps/web/src/routes/index.tsx`) forces this `.dark` scope on its own root element regardless of the user's theme setting — GMX's landing has no light variant — by adding the `dark` class directly rather than touching `<html>`, so the override never leaks into `/trade`, `/pools`, `/earn`, `/referrals`, or `/faucet`.
 
 ## Audit history
 

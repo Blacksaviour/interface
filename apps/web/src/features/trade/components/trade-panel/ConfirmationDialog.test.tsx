@@ -12,23 +12,34 @@
  * The heavy Base UI <Dialog> is stubbed with pass-through elements for speed.
  */
 
-import { afterEach, beforeEach, describe, expect, it, mock } from "bun:test"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { cleanup, render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 
 import { formatUsd } from "../../lib/trade-math"
 
+// `vi.mock` factories are hoisted above module-level declarations, so anything
+// they close over has to be created inside `vi.hoisted` to avoid a TDZ error.
+const { wallet, TOTAL_FEES_USD, createSwapOrder, sendBatchOrderTxn } = vi.hoisted(
+  () => ({
+    // Mutable holder so `beforeEach` can reset the connected account.
+    wallet: {
+      address: "GTESTACCOUNTXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    },
+    TOTAL_FEES_USD: 12.34,
+    createSwapOrder: vi.fn(() => Promise.resolve({})),
+    sendBatchOrderTxn: vi.fn(() => Promise.resolve({})),
+  })
+)
+
 // ── Wallet: a connected account so the confirm path runs the order flow ──────
-let walletAddress: string | null =
-  "GTESTACCOUNTXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-mock.module("@/features/wallet/store/wallet-store", () => ({
+vi.mock("@/features/wallet/store/wallet-store", () => ({
   useWalletStore: <T,>(selector: (state: { address: string | null }) => T): T =>
-    selector({ address: walletAddress }),
+    selector({ address: wallet.address }),
 }))
 
 // ── Fees: fixed, deterministic ───────────────────────────────────────────────
-const TOTAL_FEES_USD = 12.34
-mock.module("../../hooks/useTradeFees", () => ({
+vi.mock("../../hooks/useTradeFees", () => ({
   useTradeFees: () => ({
     positionFeeUsd: 0,
     priceImpactUsd: 0,
@@ -39,24 +50,22 @@ mock.module("../../hooks/useTradeFees", () => ({
 }))
 
 // ── Transaction layer: mocked so no real transaction is ever submitted ───────
-const createSwapOrder = mock(() => Promise.resolve({}))
-const sendBatchOrderTxn = mock(() => Promise.resolve({}))
-mock.module("../../lib/stellar", () => ({ createSwapOrder, sendBatchOrderTxn }))
+vi.mock("../../lib/stellar", () => ({ createSwapOrder, sendBatchOrderTxn }))
 
-mock.module("@/lib/soroban/simulate", () => ({
-  estimateFee: mock(() => Promise.resolve({ total: "0.5" })),
+vi.mock("@/lib/soroban/simulate", () => ({
+  estimateFee: vi.fn(() => Promise.resolve({ total: "0.5" })),
 }))
-mock.module("@/lib/contracts/exchange-router-client", () => ({
-  buildCreateOrderTransaction: mock(() => Promise.resolve({})),
-  buildBatchOrderTransaction: mock(() => Promise.resolve({})),
+vi.mock("@/lib/contracts/exchange-router-client", () => ({
+  buildCreateOrderTransaction: vi.fn(() => Promise.resolve({})),
+  buildBatchOrderTransaction: vi.fn(() => Promise.resolve({})),
 }))
-mock.module("../../lib/order-encoding", () => ({
+vi.mock("../../lib/order-encoding", () => ({
   toCreateOrderParams: (o: unknown) => o,
   toDecreaseOrderParams: (o: unknown) => o,
 }))
 
 // ── Base UI dialog: lightweight stand-ins (render children when open) ─────────
-mock.module("@workspace/ui/components/dialog", () => ({
+vi.mock("@workspace/ui/components/dialog", () => ({
   Dialog: ({ open, children }: { open: boolean; children: React.ReactNode }) =>
     open ? <div role="dialog">{children}</div> : null,
   DialogContent: ({ children }: { children: React.ReactNode }) => (
@@ -92,7 +101,7 @@ function makeTradeState() {
     triggerPrice: "",
     leverage: 10,
     sidecarOrders: [],
-    clearSidecarOrders: mock(() => {}),
+    clearSidecarOrders: vi.fn(() => {}),
     tradeFlags: {
       isLong: true,
       isShort: false,
@@ -108,7 +117,7 @@ function makeTradeState() {
 type DialogProps = React.ComponentProps<typeof ConfirmationDialog>
 
 function renderDialog(overrides: Partial<DialogProps> = {}) {
-  const onClose = mock(() => {})
+  const onClose = vi.fn(() => {})
   render(
     <ConfirmationDialog
       open
@@ -131,7 +140,7 @@ function rowValue(label: string): string {
 }
 
 beforeEach(() => {
-  walletAddress = "GTESTACCOUNTXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+  wallet.address = "GTESTACCOUNTXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
   createSwapOrder.mockClear()
   sendBatchOrderTxn.mockClear()
 })

@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest"
 import { renderHook } from "@testing-library/react"
 import { useBoundedChartHeight } from "./useBoundedChartHeight"
-import { CHART_HEIGHT_MAX, CHART_HEIGHT_MIN } from "../store/layout-preferences-store"
+import { CHART_ROW_HEIGHT_MAX, CHART_ROW_HEIGHT_MIN } from "../store/layout-preferences-store"
 
 function refWithHeight(height: number) {
   const el = document.createElement("div")
@@ -19,11 +19,11 @@ describe("useBoundedChartHeight", () => {
   it("clamps down when the container is too short to fit the requested height plus the sibling minimum", () => {
     // 300px container, 160px reserved for the sibling panel -> at most 240px (the floor) for the chart.
     const { result } = renderHook(() => useBoundedChartHeight(refWithHeight(300), 700))
-    expect(result.current).toBe(CHART_HEIGHT_MIN)
+    expect(result.current).toBe(CHART_ROW_HEIGHT_MIN)
   })
 
   it("never exceeds the configured maximum even on very tall containers", () => {
     const { result } = renderHook(() => useBoundedChartHeight(refWithHeight(5000), 5000))
-    expect(result.current).toBe(CHART_HEIGHT_MAX)
+    expect(result.current).toBe(CHART_ROW_HEIGHT_MAX)
   })
 })

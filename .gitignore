@@ -48,5 +48,6 @@ fix.md
 # e2e/*.spec.ts-snapshots/ are intentionally NOT ignored — those are
 # committed regression baselines, not run output)
 test-results/
-playwright-report/
-blob-report/
+# Generated OG images
+apps/docs/public/og/
+.nitro-static/og/

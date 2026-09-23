@@ -8,16 +8,19 @@ import type { VariantProps } from "class-variance-authority"
 /**
  * Typography scale for body copy.
  *
+ * ds-allow: the arbitrary value below is quoted as the anti-pattern this
+ * component exists to replace, not applied to any element.
+ *
  * Feature code should pick a `size`/`tone` pair instead of reaching for
  * arbitrary values like `text-[11px] text-muted-foreground/60`.
  */
 const textVariants = cva("", {
   variants: {
     size: {
-      "2xs": "text-[0.625rem] leading-4",
-      xs: "text-[0.6875rem] leading-4",
+      "2xs": "text-10 leading-4",
+      xs: "text-11 leading-4",
       sm: "text-xs leading-5",
-      md: "text-[0.8125rem] leading-5",
+      md: "text-13 leading-5",
       base: "text-sm leading-5",
       lg: "text-base leading-6",
     },
@@ -86,9 +89,9 @@ function Text({
 const headingVariants = cva("tracking-tight text-foreground", {
   variants: {
     level: {
-      1: "text-[1.375rem] font-semibold",
-      2: "text-[0.9375rem] font-semibold",
-      3: "text-[0.8125rem] font-semibold",
+      1: "text-22 font-semibold",
+      2: "text-15 font-semibold",
+      3: "text-13 font-semibold",
       4: "text-xs font-semibold",
     },
   },

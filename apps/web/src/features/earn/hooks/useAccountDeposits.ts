@@ -6,14 +6,14 @@
  */
 
 import { useQuery } from "@tanstack/react-query"
+import type { Deposit } from "@/lib/graphql/types"
 import { executeGraphQLQuery } from "@/lib/graphql/client"
 import { GET_ACCOUNT_DEPOSITS } from "@/lib/graphql/queries"
 import { indexerQueryKeys } from "@/lib/graphql/query-keys"
 import { INDEXER_CONFIG } from "@/app/config/indexer"
-import type { Deposit } from "@/lib/graphql/types"
 
 export type UseAccountDepositsResult = {
-  data: Deposit[]
+  data: Array<Deposit>
   isLoading: boolean
   error: Error | null
   isDisabled: boolean
@@ -51,7 +51,7 @@ export function useAccountDeposits(account: string | null): UseAccountDepositsRe
 
   return {
     data: data ?? [],
-    error: error as Error | null,
+    error: error,
     isLoading,
     isDisabled: false,
   }

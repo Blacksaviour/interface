@@ -172,9 +172,7 @@ function DialogExamples() {
   return (
     <div>
       <Dialog>
-        <DialogTrigger asChild>
-          <Button>Open Dialog</Button>
-        </DialogTrigger>
+        <DialogTrigger render={<Button>Open Dialog</Button>} />
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Example Dialog</DialogTitle>
@@ -275,17 +273,17 @@ function NumericExamples() {
 function SurfaceExamples() {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
-      <Card padding="md">
+      <Card padding="default">
         <Text size="sm" tone="muted">
           Card — default surface
         </Text>
       </Card>
-      <Card variant="muted" padding="md">
+      <Card variant="subtle" padding="default">
         <Text size="sm" tone="muted">
           Card — muted surface
         </Text>
       </Card>
-      <Card variant="dashed" padding="md">
+      <Card variant="dashed" padding="default">
         <Text size="sm" tone="muted">
           Card — dashed placeholder
         </Text>

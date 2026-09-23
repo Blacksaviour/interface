@@ -14,8 +14,8 @@
  * `@stellar/stellar-sdk` to decode them further.
  */
 
-import { rpc as StellarRpc, xdr } from "@stellar/stellar-sdk"
 import { sorobanRpc } from "./client"
+import type { rpc as StellarRpc, xdr } from "@stellar/stellar-sdk"
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -30,14 +30,14 @@ export type ContractEvent = {
   txHash: string
   contractId: string
   /** Decoded ScVal topics */
-  topics: xdr.ScVal[]
+  topics: Array<xdr.ScVal>
   /** Decoded ScVal value */
   value: xdr.ScVal
 }
 
 /** Result of a single `queryContractEvents` call. */
 export type ContractEventsPage = {
-  events: ContractEvent[]
+  events: Array<ContractEvent>
   /**
    * Opaque cursor string for pagination.  Pass to the next call as `cursor`
    * to fetch the following page.  Empty string when the result set is empty.
@@ -50,7 +50,7 @@ export type QueryContractEventsOptions = {
   /** Contract ID (C... address) to filter by. */
   contractId: string
   /** Topic filters (array of ScVal arrays encoded as base64 XDR strings). */
-  topicFilters?: string[][]
+  topicFilters?: Array<Array<string>>
   /**
    * Ledger range mode: start from this ledger.
    * Mutually exclusive with `cursor`.
@@ -76,8 +76,9 @@ function toContractEvent(raw: StellarRpc.Api.EventResponse): ContractEvent {
     ledger: raw.ledger,
     ledgerClosedAt: raw.ledgerClosedAt,
     txHash: raw.txHash,
-    // The SDK sets contractId as a Contract instance when present
-    contractId: raw.contractId?.contractId().toString("hex") ?? "",
+    // The SDK sets contractId as a Contract instance when present;
+    // `contractId()` already returns the C… string form.
+    contractId: raw.contractId?.contractId() ?? "",
     topics: raw.topic,
     value: raw.value,
   }

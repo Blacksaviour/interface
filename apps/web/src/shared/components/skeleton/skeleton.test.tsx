@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { TextSkeleton, CardSkeleton, TableSkeleton } from "./index";
+import { CardSkeleton, TableSkeleton, TextSkeleton } from "./index";
 
 describe("Skeleton Loaders", () => {
   it("renders text skeleton with accessible busy state", () => {

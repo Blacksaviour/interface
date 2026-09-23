@@ -1,20 +1,11 @@
-import { Card, CardContent, CardHeader } from "@workspace/ui/components/card"
-import { Stat } from "@workspace/ui/components/stat"
-import { Heading, Text } from "@workspace/ui/components/text"
-import { DistributionsTable, type DistributionRow } from "./distributions-table"
+import { DistributionsTable } from "./distributions-table"
+import type { DistributionRow } from "./distributions-table"
 
 // TODO: Replace with live data fetched from Stellar event log or subgraph:
 //   - Query RewardsDistributor.Distribute events for connected account
 //   - Paginate by epoch (weekly snapshots stored in DataStore)
 //   - Fields: epochId, timestamp, tokenAmount, tokenAddress, txHash
-const MOCK_DISTRIBUTIONS: DistributionRow[] = []
-
-const SCHEDULE_FACTS = [
-  { label: "Distribution cycle", value: "Weekly" },
-  { label: "Fee allocation", value: "70% to stakers" },
-  { label: "Remaining", value: "27% Treasury" },
-  { label: "Protocol", value: "3% team" },
-]
+const MOCK_DISTRIBUTIONS: Array<DistributionRow> = []
 
 function InfoCard() {
   return (

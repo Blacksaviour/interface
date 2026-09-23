@@ -16,9 +16,9 @@ describe("MobileTradeNav", () => {
     expect(onChange).toHaveBeenCalledWith("positions")
   })
 
-  it("renders all three trading views", () => {
+  it("renders all four trading views", () => {
     render(<MobileTradeNav active="trade" onChange={vi.fn()} />)
-    expect(screen.getAllByRole("tab")).toHaveLength(3)
+    expect(screen.getAllByRole("tab")).toHaveLength(4)
   })
 })
 

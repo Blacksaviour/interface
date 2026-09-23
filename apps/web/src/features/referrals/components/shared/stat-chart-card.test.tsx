@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from "vitest"
+import { afterEach, describe, expect, it } from "vitest"
 import { cleanup, render, screen } from "@testing-library/react"
 import { StatChartCard } from "./stat-chart-card"
 
@@ -91,7 +91,7 @@ describe("StatChartCard", () => {
       <StatChartCard title="Volume" tooltip="test" value={0} period="total" />,
     )
     const tickTexts = Array.from(container.querySelectorAll('text')).filter(
-      (t) => ["4", "3", "2", "1", "0"].includes(t.textContent ?? ""),
+      (t) => ["4", "3", "2", "1", "0"].includes(t.textContent),
     )
     expect(tickTexts).toHaveLength(5)
   })

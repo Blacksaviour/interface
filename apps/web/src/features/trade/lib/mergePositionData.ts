@@ -102,10 +102,10 @@ export function mergePositionData(
  * @returns Array of hybrid positions
  */
 export function mergePositionsData(
-  indexedPositions: Position[],
+  indexedPositions: Array<Position>,
   freshDataMap?: Map<string, FreshPositionData>,
   freshPriceMap?: Map<string, FreshPriceData>,
-): HybridPosition[] {
+): Array<HybridPosition> {
   return indexedPositions.map((position) => {
     const freshPosition = freshDataMap?.get(position.key)
     const freshPrice = freshPriceMap?.get(position.market.key)

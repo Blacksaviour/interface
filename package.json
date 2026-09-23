@@ -8,7 +8,7 @@
     "lint": "turbo lint",
     "format": "turbo format",
     "typecheck": "turbo typecheck",
-    "test": "turbo test",
+    "test": "turbo test && bun test scripts/changelog",
     "test:coverage": "turbo test:coverage",
     "test:e2e": "playwright test",
     "contracts:gen:all": "bun run scripts/generate-bindings.ts",
@@ -17,7 +17,17 @@
     "indexer:dev": "bun run --cwd apps/s03-indexer dev",
     "indexer:start": "bun run --cwd apps/s03-indexer start",
     "check:integration": "bash scripts/check-integration.sh",
-    "check:tokens": "bun run scripts/check-design-tokens.ts"
+    "check:tokens": "bun run scripts/check-design-tokens.ts",
+    "check:content": "bun run --cwd apps/docs check:content",
+    "check:links": "bun run --cwd apps/docs check:links",
+    "generate:design-tokens": "bun run scripts/generate-design-tokens.ts",
+    "check:design-tokens:generated": "bun run scripts/generate-design-tokens.ts --check",
+    "generate:errors": "bun run scripts/generate-errors-reference.ts",
+    "check:errors:generated": "bun run scripts/generate-errors-reference.ts --check",
+    "changelog:validate": "bun run scripts/changelog/validate.ts",
+    "changelog:release": "bun run scripts/changelog/release.ts",
+    "changelog:build": "bun run scripts/changelog/build.ts",
+    "changelog:verify-tag": "bun run scripts/changelog/verify-tag.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",

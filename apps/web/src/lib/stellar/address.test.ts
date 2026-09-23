@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest"
 import {
+  STELLAR_ADDRESS_LENGTH,
   formatAddress,
   isValidAddress,
   isValidContractAddress,
   isValidStellarAddress,
   shortenAddress,
-  STELLAR_ADDRESS_LENGTH,
 } from "./address"
 
 // Valid 56-character Stellar addresses used throughout the tests.

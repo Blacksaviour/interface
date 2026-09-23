@@ -44,7 +44,7 @@ function TableToolbar({
         </div>
       )}
       {count != null && (
-        <span className="ml-auto text-xs text-muted-foreground">
+        <span className="ms-auto text-xs text-muted-foreground">
           {count} {count === 1 ? 'result' : 'results'}
         </span>
       )}

@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { Badge } from "@workspace/ui/components/badge"
-import { Card, CardHeader } from "@workspace/ui/components/card"
 import { LoadingButton } from "@workspace/ui/components/loading-button"
 import { NumericText } from "@workspace/ui/components/numeric"
 import { EmptyState, LoadingState } from "@workspace/ui/components/states"
@@ -13,8 +12,12 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table"
-import { Heading, Text } from "@workspace/ui/components/text"
-import { useUserGlvPositions, useUserGmPositions, useUserSO4Stats } from "../../hooks/use-earn-data"
+import { Text } from "@workspace/ui/components/text"
+import {
+  useUserGlvPositions,
+  useUserGmPositions,
+  useUserSO4Stats,
+} from "../../hooks/use-earn-data"
 import { unstakeSO4, withdrawGLV, withdrawGM } from "../../lib/earn"
 import { ASSET_KIND_BADGE } from "../../lib/badges"
 import { formatPct, formatUsd } from "@/shared/lib/format"
@@ -40,63 +43,14 @@ function WalletEmptyIcon() {
   )
 }
 
-function EmptyState() {
-  return (
-    <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted/40">
-        <WalletEmptyIcon />
-      </div>
-      <div>
-        <p className="text-sm font-medium text-foreground/80">You have no deposits</p>
-        <p className="mt-0.5 text-xs text-muted-foreground">
-          Start earning by depositing into a pool
-        </p>
-        <a href="#browse-pools" className="text-xs text-primary hover:text-primary/80 font-medium mt-2 inline-block">
-          Browse pools →
-        </a>
-      </div>
-    </div>
-  )
-}
-
-function LoadingRows() {
-  return (
-    <div className="space-y-px p-1">
-      {[0, 1].map((i) => (
-        <div key={i} className="flex items-center gap-4 px-4 py-3">
-          <Skeleton className="h-8 w-8 rounded-full" />
-          <Skeleton className="h-4 w-28" />
-          <Skeleton className="ml-auto h-4 w-16" />
-          <Skeleton className="h-4 w-20" />
-          <Skeleton className="h-7 w-14" />
-        </div>
-      ))}
-    </div>
-  )
-}
-
-const KIND_BADGE: Record<string, string> = {
-  Staking: "bg-violet-500/10 text-violet-400 border-violet-500/20",
-  GM: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-  GLV: "bg-teal-500/10 text-teal-400 border-teal-500/20",
-}
-
-function TypeBadge({ kind }: { kind: string }) {
-  return (
-    <span
-      className={cn(
-        "inline-flex h-5 items-center rounded-full border px-2 text-10 font-medium",
-        KIND_BADGE[kind] ?? "bg-muted text-muted-foreground border-border",
-      )}
-    >
-      {kind}
-    </span>
-  )
+function TypeBadge({ kind }: { kind: keyof typeof ASSET_KIND_BADGE }) {
+  return <Badge variant={ASSET_KIND_BADGE[kind]}>{kind}</Badge>
 }
 
 export function AssetsList() {
   const { data: gmPositions = [], isLoading: gmLoading } = useUserGmPositions()
-  const { data: glvPositions = [], isLoading: glvLoading } = useUserGlvPositions()
+  const { data: glvPositions = [], isLoading: glvLoading } =
+    useUserGlvPositions()
   const { data: so4Stats, isLoading: so4Loading } = useUserSO4Stats()
   const [pending, setPending] = useState<string | null>(null)
 
@@ -160,7 +114,9 @@ export function AssetsList() {
                   <NumericText role="muted">—</NumericText>
                 </TableCell>
                 <TableCell align="right">
-                  <NumericText>{formatUsd(so4Stats.stakedValueUsd)}</NumericText>
+                  <NumericText>
+                    {formatUsd(so4Stats.stakedValueUsd)}
+                  </NumericText>
                 </TableCell>
                 <TableCell align="right">
                   <LoadingButton
@@ -170,7 +126,7 @@ export function AssetsList() {
                     loadingText="Unstaking"
                     onClick={() =>
                       void runAction("so4", () =>
-                        unstakeSO4("DUMMY_ACCOUNT", so4Stats.stakedAmount),
+                        unstakeSO4("DUMMY_ACCOUNT", so4Stats.stakedAmount)
                       )
                     }
                   >
@@ -202,7 +158,11 @@ export function AssetsList() {
                     loadingText="Selling"
                     onClick={() =>
                       void runAction(pos.poolId, () =>
-                        withdrawGM("DUMMY_ACCOUNT", pos.poolName, pos.balanceTokens),
+                        withdrawGM(
+                          "DUMMY_ACCOUNT",
+                          pos.poolName,
+                          pos.balanceTokens
+                        )
                       )
                     }
                   >
@@ -242,8 +202,8 @@ export function AssetsList() {
                         withdrawGLV(
                           "DUMMY_ACCOUNT",
                           `${pos.vaultName} [${pos.displayPair}]`,
-                          pos.balanceTokens,
-                        ),
+                          pos.balanceTokens
+                        )
                       )
                     }
                   >

@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
-import { DataTable, type Column } from '@workspace/ui/components/data-table'
+import {  DataTable } from '@workspace/ui/components/data-table'
 import { Numeric } from '@workspace/ui/components/numeric'
 import { EmptyState } from '@workspace/ui/components/empty-state'
+import type {Column} from '@workspace/ui/components/data-table';
 import type { PoolMarketConfig } from '../data/markets'
 
 export interface Pool {
@@ -18,7 +19,7 @@ export interface GmPoolsTableProps {
 }
 
 function parseNumericString(value: string): number | null {
-  const cleaned = value.replace(/[^0-9.\-]/g, '')
+  const cleaned = value.replace(/[^0-9.-]/g, '')
   if (cleaned === '' || cleaned === '.' || cleaned === '-') return null
   const num = Number(cleaned)
   return Number.isNaN(num) ? null : num
@@ -35,7 +36,7 @@ export function GmPoolsTable({ isLoading, pools, markets }: GmPoolsTableProps) {
     })) : [])
   }, [isLoading, pools, markets])
 
-  const columns: Column<Pool>[] = useMemo(() => [
+  const columns: Array<Column<Pool>> = useMemo(() => [
     {
       id: 'pool',
       header: 'Pool',

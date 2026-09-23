@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
-import { toast } from "sonner"
+import { toast } from "@workspace/ui/components/toast"
 import {
   Dialog,
   DialogContent,
@@ -55,7 +55,7 @@ export function PoolTransactionDialog({
   onClose,
   onQueued,
 }: PoolTransactionDialogProps) {
-  const toastIdRef = useRef<string | number | null>(null)
+  const toastIdRef = useRef<string | null>(null)
   const [longAmount, setLongAmount] = useState("")
   const [shortAmount, setShortAmount] = useState("")
   const [gmAmount, setGmAmount] = useState("")

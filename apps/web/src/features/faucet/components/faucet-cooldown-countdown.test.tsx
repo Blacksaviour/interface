@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { render, screen, waitFor } from "@testing-library/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { FaucetPage } from "./faucet-page"
 import { useWalletStore } from "@/features/wallet/store/wallet-store"
 import { fakeWalletAddress } from "@/test/fakes/wallet"
-import { FaucetPage } from "./faucet-page"
 
 // ── UI mocks ───────────────────────────────────────────────────────────────────
 vi.mock("../hooks/useClaim", () => ({
@@ -17,7 +17,7 @@ vi.mock("../hooks/useClaim", () => ({
 
 const mockUseFaucetData = vi.fn()
 vi.mock("../hooks/useFaucetData", () => ({
-  useFaucetData: (...args: unknown[]) => mockUseFaucetData(...args),
+  useFaucetData: (...args: Array<unknown>) => mockUseFaucetData(...args),
 }))
 
 vi.mock("@/ui/Navbar", () => ({ Navbar: () => <nav data-testid="navbar" /> }))

@@ -1,17 +1,17 @@
 import { useEffect, useState, type RefObject } from "react"
 import {
   clamp,
-  CHART_HEIGHT_MIN,
-  CHART_HEIGHT_MAX,
+  CHART_ROW_HEIGHT_MIN,
+  CHART_ROW_HEIGHT_MAX,
 } from "../store/layout-preferences-store"
 
-/** Minimum height left for the panel below the chart (e.g. account tabs). */
+/** Minimum height left for the panel below the chart row (e.g. account tabs). */
 const MIN_BOTTOM_HEIGHT = 160
 
 /**
- * Clamps a stored chart height against the *live* size of its container,
- * so restoring a saved layout on a smaller screen never pushes the sibling
- * panel below its usable minimum (OB-038 acceptance criterion).
+ * Clamps a stored chart-row height against the *live* size of its
+ * container, so restoring a saved layout on a smaller screen never pushes
+ * the sibling panel below its usable minimum (OB-038 acceptance criterion).
  */
 export function useBoundedChartHeight(
   containerRef: RefObject<HTMLElement | null>,
@@ -34,9 +34,9 @@ export function useBoundedChartHeight(
   }, [containerRef])
 
   if (containerHeight == null) {
-    return clamp(requestedHeight, CHART_HEIGHT_MIN, CHART_HEIGHT_MAX)
+    return clamp(requestedHeight, CHART_ROW_HEIGHT_MIN, CHART_ROW_HEIGHT_MAX)
   }
 
-  const maxForContainer = Math.max(CHART_HEIGHT_MIN, containerHeight - MIN_BOTTOM_HEIGHT)
-  return clamp(requestedHeight, CHART_HEIGHT_MIN, Math.min(CHART_HEIGHT_MAX, maxForContainer))
+  const maxForContainer = Math.max(CHART_ROW_HEIGHT_MIN, containerHeight - MIN_BOTTOM_HEIGHT)
+  return clamp(requestedHeight, CHART_ROW_HEIGHT_MIN, Math.min(CHART_ROW_HEIGHT_MAX, maxForContainer))
 }

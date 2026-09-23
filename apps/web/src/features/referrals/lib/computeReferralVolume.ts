@@ -15,7 +15,7 @@ import type { Order } from "@/lib/graphql/types"
  * @param orders - Array of executed orders to compute volume from
  * @returns Total volume as a string in base units (e.g., "1000000" for 1 USD with 6 decimals)
  */
-export function computeReferralVolume(orders: Order[]): string {
+export function computeReferralVolume(orders: Array<Order>): string {
   if (orders.length === 0) {
     return "0"
   }

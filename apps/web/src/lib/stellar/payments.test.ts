@@ -16,13 +16,14 @@
  */
 
 import { describe, expect, it } from "vitest"
-import { http, HttpResponse } from "msw"
+import { HttpResponse, http } from "msw"
 import { server } from "../../../test/msw/server"
 import {
-  fetchPaymentHistory,
+  
   fetchAllPaymentHistory,
-  type PaymentRecord,
+  fetchPaymentHistory
 } from "./payments"
+import type {PaymentRecord} from "./payments";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Fixtures
@@ -51,7 +52,7 @@ function makeRecord(id: string, overrides: Partial<PaymentRecord> = {}): Payment
  * Build a Horizon HAL collection page.
  * Pass `nextCursor` to populate `_links.next.href`; omit / null for last page.
  */
-function horizonPage(records: PaymentRecord[], nextCursor: string | null = null) {
+function horizonPage(records: Array<PaymentRecord>, nextCursor: string | null = null) {
   return {
     _links: {
       self: { href: PAYMENTS_URL },
@@ -71,7 +72,7 @@ function horizonPage(records: PaymentRecord[], nextCursor: string | null = null)
 
 type CursorMap = Record<
   string, // cursor value ("" = no cursor)
-  { records: PaymentRecord[]; nextCursor: string | null }
+  { records: Array<PaymentRecord>; nextCursor: string | null }
 >
 
 function paymentsHandler(pages: CursorMap) {

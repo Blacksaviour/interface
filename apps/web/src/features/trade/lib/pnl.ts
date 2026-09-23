@@ -17,7 +17,7 @@ function isBad(n: number | undefined | null): boolean {
 export function formatPnl(pnlUsd: number | undefined | null): string {
   if (isBad(pnlUsd)) return FALLBACK
   const sign = pnlUsd! >= 0 ? "+" : ""
-  return `${sign}${formatUsd(pnlUsd!)}`
+  return `${sign}${formatUsd(pnlUsd)}`
 }
 
 /**

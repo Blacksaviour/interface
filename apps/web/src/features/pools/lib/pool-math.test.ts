@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest"
 
 import {
-  getFundingRatePerHourPct,
   getComposition,
+  getFundingRatePerHourPct,
   getOpenInterestUsd,
   getPoolTvlUsd,
   rawToDisplay,

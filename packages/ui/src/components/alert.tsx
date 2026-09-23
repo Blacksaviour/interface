@@ -297,7 +297,7 @@ function Alert({
           aria-label={dismissLabel}
           onClick={onDismiss}
           className={cn(
-            "ml-auto shrink-0 self-start rounded-sm p-0.5 opacity-60",
+            "ms-auto shrink-0 self-start rounded-sm p-0.5 opacity-60",
             "transition-opacity hover:opacity-100",
             "focus-visible:ring-2 focus-visible:ring-current/40 focus-visible:outline-none"
           )}

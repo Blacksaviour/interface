@@ -1,2 +1,2 @@
-export { useToast, ToastProvider } from "./toast"
-export type { ToastVariant, ToastItem } from "./toast"
+export { useToast, ToastProvider } from "@workspace/ui/components/toast"
+export type { ToastVariant, ToastItem } from "@workspace/ui/components/toast"

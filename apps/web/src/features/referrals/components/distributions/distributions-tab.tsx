@@ -1,30 +1,11 @@
 import { useState } from "react"
-import { Card, CardContent, CardHeader } from "@workspace/ui/components/card"
-import { LoadingButton } from "@workspace/ui/components/loading-button"
-import { NumericText } from "@workspace/ui/components/numeric"
-import { Stat } from "@workspace/ui/components/stat"
+import { Button } from "@workspace/ui/components/button"
+import { Card } from "@workspace/ui/components/card"
 import { EmptyState } from "@workspace/ui/components/states"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableEmptyRow,
-  TableHead,
-  TableHeadRow,
-  TableHeader,
-  TableRow,
-} from "@workspace/ui/components/table"
-import { Heading, Text } from "@workspace/ui/components/text"
 import { useAffiliateStats, useDistributions } from "../../hooks/use-referrals-data"
 import { claimDistribution } from "../../lib/referrals"
 import { useWalletStore } from "@/features/wallet/store/wallet-store"
 import { formatToken, formatUsd } from "@/shared/lib/format"
-
-const SCHEDULE_FACTS = [
-  { label: "Distribution cycle", value: "Weekly (Thu)" },
-  { label: "Payment token", value: "USDC" },
-  { label: "Claim window", value: "No expiry" },
-]
 
 function LockIcon() {
   return (
@@ -97,13 +78,13 @@ export function DistributionsTab() {
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
             <thead>
-              <tr className="border-b border-border bg-muted/25 text-left">
+              <tr className="border-b border-border bg-muted/25 text-start">
                 <th className="px-5 py-3 font-medium text-muted-foreground">Epoch</th>
                 <th className="px-5 py-3 font-medium text-muted-foreground">Date</th>
                 <th className="px-5 py-3 text-right font-medium text-muted-foreground">Amount</th>
                 <th className="px-5 py-3 font-medium text-muted-foreground">Token</th>
                 <th className="px-5 py-3 text-right font-medium text-muted-foreground">USD value</th>
-                <th className="px-5 py-3 text-right font-medium text-muted-foreground">Action</th>
+                <th className="px-5 py-3 text-end font-medium text-muted-foreground">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -118,7 +99,7 @@ export function DistributionsTab() {
                     <td className="px-5 py-3.5 text-right font-mono">{formatToken(d.amount, d.token)}</td>
                     <td className="px-5 py-3.5 font-mono">{d.token}</td>
                     <td className="px-5 py-3.5 text-right font-mono">{formatUsd(d.amountUsd)}</td>
-                    <td className="px-5 py-3.5 text-right">
+                    <td className="px-5 py-3.5 text-end">
                       <Button
                         size="xs"
                         disabled={claiming === d.id}

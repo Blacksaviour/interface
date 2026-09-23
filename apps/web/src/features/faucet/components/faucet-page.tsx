@@ -3,6 +3,7 @@ import { AppShell } from "@workspace/ui/components/app-shell"
 import { Card, CardContent } from "@workspace/ui/components/card"
 import { LoadingButton } from "@workspace/ui/components/loading-button"
 import { PageHeader } from "@workspace/ui/components/page-header"
+import { Skeleton } from "@workspace/ui/components/skeleton"
 import { Text } from "@workspace/ui/components/text"
 import { FAUCET_TOKENS, type FaucetTokenConfig } from "../data/tokens" // eslint-disable-line import/consistent-type-specifier-style
 import { FAUCET_CONTRACT_ID } from "../lib/clients"

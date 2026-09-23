@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { toast } from "sonner"
+import { toast } from "@workspace/ui/components/toast"
 import { useQueryClient } from "@tanstack/react-query"
 import { Button } from "@workspace/ui/components/button"
 import { DataTable } from "@workspace/ui/components/data-table"

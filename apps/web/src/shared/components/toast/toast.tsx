@@ -1,13 +1,14 @@
 import {
+  
   createContext,
   useCallback,
   useContext,
-  useState,
-  useRef,
   useEffect,
-  type ReactNode,
+  useRef,
+  useState
 } from "react"
 import { cn } from "@workspace/ui/lib/utils"
+import type {ReactNode} from "react";
 
 export type ToastVariant = "success" | "error" | "info"
 
@@ -20,7 +21,7 @@ export type ToastItem = {
 }
 
 type ToastContextValue = {
-  toasts: ToastItem[]
+  toasts: Array<ToastItem>
   show: (message: string, variant?: ToastVariant, duration?: number) => void
   dismiss: (id: string) => void
 }
@@ -80,7 +81,7 @@ function Toast({ item, onDismiss }: { item: ToastItem; onDismiss: (id: string) =
 }
 
 export function ToastProvider({ children }: { children: ReactNode }) {
-  const [toasts, setToasts] = useState<ToastItem[]>([])
+  const [toasts, setToasts] = useState<Array<ToastItem>>([])
 
   const dismiss = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id))
@@ -100,7 +101,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       <div
         aria-live="polite"
         aria-atomic="false"
-        className="fixed bottom-4 right-4 z-50 flex flex-col gap-2"
+        className="fixed bottom-4 end-4 z-50 flex flex-col gap-2"
       >
         {toasts.map((t) => (
           <Toast key={t.id} item={t} onDismiss={dismiss} />

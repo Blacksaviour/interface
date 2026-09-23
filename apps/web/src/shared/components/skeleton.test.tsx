@@ -19,9 +19,9 @@ afterEach(() => {
 // ---------------------------------------------------------------------------
 
 function getBySlot(container: HTMLElement, slot: string): HTMLElement {
-  const el = container.querySelector(
+  const el = container.querySelector<HTMLElement>(
     `[data-slot="${slot}"]`
-  ) as HTMLElement | null
+  )
   if (!el) throw new Error(`No element with data-slot="${slot}" found`)
   return el
 }
@@ -32,7 +32,7 @@ function getAllBySlot(
 ): Array<HTMLElement> {
   return Array.from(
     container.querySelectorAll(`[data-slot="${slot}"]`)
-  ) as Array<HTMLElement>
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -119,7 +119,7 @@ describe("Skeleton – reduced-motion structural guarantee", () => {
     // `motion-safe:animate-pulse` regardless of which slot attribute wins.
     const allAnimated = Array.from(
       container.querySelectorAll('[class*="motion-safe:animate-pulse"]')
-    ) as Array<HTMLElement>
+    )
     // 1 (SkeletonText) + 1 (Avatar) + 1 (Control) + 1 (Card) + 4 (TableRow cols)
     expect(allAnimated.length).toBeGreaterThanOrEqual(8)
     for (const el of allAnimated) {

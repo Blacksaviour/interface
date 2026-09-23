@@ -9,6 +9,11 @@
  * unnecessary in practice.
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+import type {
+  explorerAccountUrl as ExplorerAccountUrl,
+  explorerContractUrl as ExplorerContractUrl,
+  explorerTxUrl as ExplorerTxUrl,
+} from "./explorer"
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Fixtures
@@ -23,9 +28,9 @@ const CONTRACT_ID = "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF"
 // ─────────────────────────────────────────────────────────────────────────────
 
 describe("explorer URL builders — testnet", () => {
-  let explorerTxUrl: typeof import("./explorer").explorerTxUrl
-  let explorerAccountUrl: typeof import("./explorer").explorerAccountUrl
-  let explorerContractUrl: typeof import("./explorer").explorerContractUrl
+  let explorerTxUrl: typeof ExplorerTxUrl
+  let explorerAccountUrl: typeof ExplorerAccountUrl
+  let explorerContractUrl: typeof ExplorerContractUrl
 
   beforeEach(async () => {
     vi.resetModules()
@@ -84,9 +89,9 @@ describe("explorer URL builders — testnet", () => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 describe("explorer URL builders — mainnet", () => {
-  let explorerTxUrl: typeof import("./explorer").explorerTxUrl
-  let explorerAccountUrl: typeof import("./explorer").explorerAccountUrl
-  let explorerContractUrl: typeof import("./explorer").explorerContractUrl
+  let explorerTxUrl: typeof ExplorerTxUrl
+  let explorerAccountUrl: typeof ExplorerAccountUrl
+  let explorerContractUrl: typeof ExplorerContractUrl
 
   beforeEach(async () => {
     vi.resetModules()
@@ -136,9 +141,9 @@ describe("explorer URL builders — mainnet", () => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 describe("explorer URL exact string assertions", () => {
-  let explorerTxUrl: typeof import("./explorer").explorerTxUrl
-  let explorerAccountUrl: typeof import("./explorer").explorerAccountUrl
-  let explorerContractUrl: typeof import("./explorer").explorerContractUrl
+  let explorerTxUrl: typeof ExplorerTxUrl
+  let explorerAccountUrl: typeof ExplorerAccountUrl
+  let explorerContractUrl: typeof ExplorerContractUrl
 
   beforeEach(async () => {
     vi.resetModules()

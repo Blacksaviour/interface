@@ -9,30 +9,6 @@ import { claimRewards } from "../../lib/earn"
 import { formatPct, formatUsd } from "@/shared/lib/format"
 
 
-
-function StatItem({
-  label,
-  value,
-  isLoading,
-  mono = true,
-}: {
-  label: string
-  value: string
-  isLoading?: boolean
-  mono?: boolean
-}) {
-  return (
-    <div className="flex flex-col gap-1">
-      <span className="text-11 text-muted-foreground">{label}</span>
-      {isLoading ? (
-        <Skeleton className="h-5 w-20" />
-      ) : (
-        <span className={`text-sm font-medium ${mono ? "tabular-nums" : ""}`}>{value}</span>
-      )}
-    </div>
-  )
-}
-
 function InfoIcon() {
   return (
     <svg
@@ -149,7 +125,7 @@ export function RewardsBar() {
           isLoading={isLoading}
         />
 
-        <div className="ml-auto">
+        <div className="ms-auto">
           <LoadingButton
             variant="outline"
             size="lg"

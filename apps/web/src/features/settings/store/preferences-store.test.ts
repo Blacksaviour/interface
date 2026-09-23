@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { usePreferencesStore } from "./preferences-store";
 
 describe("preferences-store", () => {

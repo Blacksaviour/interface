@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { rpc as StellarRpc } from "@stellar/stellar-sdk"
-import type { Transaction } from "@stellar/stellar-sdk"
 import { estimateFee, estimateFeeFromSimulation, simulateTx } from "./simulate"
+import type { rpc as StellarRpc, Transaction  } from "@stellar/stellar-sdk"
 
 const mockSimulateTransaction = vi.fn()
 
@@ -63,7 +62,7 @@ describe("estimateFeeFromSimulation", () => {
     const zeroFee = {
       ...successResponse,
       minResourceFee: "0",
-    } as unknown as StellarRpc.Api.SimulateTransactionSuccessResponse
+    }
 
     expect(estimateFeeFromSimulation(zeroFee).total).toBe("0.0000000")
   })

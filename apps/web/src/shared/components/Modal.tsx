@@ -1,10 +1,11 @@
 import {
+  
+  
   useEffect,
-  useRef,
-  type ReactNode,
-  type RefObject,
+  useRef
 } from "react"
 import { cn } from "@workspace/ui/lib/utils"
+import type {ReactNode, RefObject} from "react";
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'

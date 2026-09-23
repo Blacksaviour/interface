@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react"
-import { toast } from "sonner"
+import { toast } from "@workspace/ui/components/toast"
 
 export function useCopy(successMessage = "Copied to clipboard") {
   const [copied, setCopied] = useState(false)

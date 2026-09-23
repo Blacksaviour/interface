@@ -6,10 +6,10 @@
  */
 
 import { useAccountOrders } from "./useAccountOrders"
+import { useOrders } from "./useOrders"
+import type { Order as ContractOrder, OrderType } from "./useOrders"
 import { useWalletStore } from "@/features/wallet/store/wallet-store"
 import { INDEXER_CONFIG } from "@/app/config/indexer"
-import { useOrders } from "./useOrders"
-import type { Order as ContractOrder } from "./useOrders"
 
 export type OrderWithIndexer = ContractOrder & {
   frozenTimestamp?: Date | null
@@ -44,7 +44,7 @@ export function useOrdersWithIndexer() {
   }
   
   // Map indexed orders to the expected format
-  const enhancedOrders: OrderWithIndexer[] = indexedOrders
+  const enhancedOrders: Array<OrderWithIndexer> = indexedOrders
     .filter(o => o.status === "created" || o.status === "updated" || o.status === "frozen")
     .map((indexedOrder) => {
       const sizeUsd = parseFloat(indexedOrder.sizeDeltaUsd ?? "0") / 1e30
@@ -55,11 +55,15 @@ export function useOrdersWithIndexer() {
         account: indexedOrder.account,
         marketAddress: indexedOrder.market.key,
         marketName: indexedOrder.market.name ?? indexedOrder.market.key,
-        orderType: indexedOrder.orderType,
-        status: indexedOrder.status as "created" | "frozen",
+        collateralToken: indexedOrder.collateralToken?.address ?? "",
+        // The indexer types these as plain strings; the filter above already
+        // narrowed status to the three values mapped here.
+        orderType: indexedOrder.orderType as OrderType,
+        status: indexedOrder.status === "frozen" ? "frozen" : "active",
         isLong: indexedOrder.isLong ?? false,
         sizeUsd,
         triggerPrice,
+        acceptablePrice: parseFloat(indexedOrder.acceptablePrice ?? "0") / 1e30,
         updatedAt: (indexedOrder.updatedTimestamp ?? indexedOrder.createdTimestamp)?.getTime() ?? Date.now(),
         frozenTimestamp: indexedOrder.frozenTimestamp,
         frozenTransactionHash: indexedOrder.frozenTransactionHash,

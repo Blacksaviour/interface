@@ -1,8 +1,8 @@
 import "./register-dom"
 import "@testing-library/jest-dom/vitest"
 import { afterAll, afterEach, beforeAll } from "vitest";
-import { server } from "./test/msw/server";
 import { cleanup } from "@testing-library/react";
+import { server } from "./test/msw/server";
 
 afterEach(() => {
   cleanup();

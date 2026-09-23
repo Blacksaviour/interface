@@ -114,9 +114,9 @@ export function ClosePositionDialog({ position, open, onClose, onConfirm }: Prop
                   placeholder="0.00"
                   value={partialUsd}
                   onChange={(e) => setPartialUsd(e.target.value)}
-                  className="pr-14 font-mono text-sm"
+                  className="pe-14 font-mono text-sm"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">
+                <span className="absolute inset-inline-end-3 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">
                   USD
                 </span>
               </div>

@@ -1,7 +1,7 @@
-import { describe, expect, it, vi, beforeEach } from "vitest"
-import { render, screen, fireEvent } from "@testing-library/react"
-import { CircuitBreakerBanner } from "./CircuitBreakerBanner"
+import { beforeEach, describe, expect, it, vi } from "vitest"
+import { fireEvent, render, screen } from "@testing-library/react"
 import * as circuitBreakerHook from "../hooks/useCircuitBreaker"
+import { CircuitBreakerBanner } from "./CircuitBreakerBanner"
 
 vi.mock("../hooks/useCircuitBreaker")
 
@@ -103,7 +103,7 @@ describe("CircuitBreakerBanner", () => {
       error: null,
     } as never)
 
-    const { container, rerender } = render(<CircuitBreakerBanner symbol="ETH" />)
+    const { container } = render(<CircuitBreakerBanner symbol="ETH" />)
     expect(screen.getByText("Execution frozen")).toBeInTheDocument()
 
     const dismissBtn = screen.getByRole("button", { name: /Dismiss/ })

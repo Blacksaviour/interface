@@ -83,7 +83,7 @@ function Field({
             <span
               aria-hidden="true"
               data-slot="field-required-indicator"
-              className="ml-0.5 text-destructive"
+              className="ms-0.5 text-destructive"
             >
               *
             </span>

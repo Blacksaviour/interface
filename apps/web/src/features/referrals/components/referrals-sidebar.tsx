@@ -1,10 +1,9 @@
 import { Card, CardContent } from "@workspace/ui/components/card"
-import { Text } from "@workspace/ui/components/text"
+import { cn } from "@workspace/ui/lib/utils"
 import { getTierByLevel } from "../data/tiers"
 import { CodeDisplay } from "./shared/code-display"
-import { FaqAccordion  } from "./shared/faq-accordion"
-import { TierBadge } from "./shared/tier-badge"
-import type {FaqItem} from "./shared/faq-accordion";
+import { FaqAccordion } from "./shared/faq-accordion"
+import type { FaqItem } from "./shared/faq-accordion"
 
 const TRADER_FAQS: Array<FaqItem> = [
   {
@@ -113,7 +112,7 @@ export function ReferralsSidebar({
                     className={cn(
                       "inline-flex items-center rounded-full px-2 py-0.5 text-10 font-semibold ring-1",
                       tier.colorClass,
-                      tier.ringClass,
+                      tier.ringClass
                     )}
                   >
                     {tier.label}
@@ -132,7 +131,8 @@ export function ReferralsSidebar({
             ) : (
               <>
                 <p className="text-xs font-semibold text-green-400">
-                  You're receiving a {traderDiscountPct}% discount on your trades!
+                  You're receiving a {traderDiscountPct}% discount on your
+                  trades!
                 </p>
                 <p className="mt-1 text-11 text-muted-foreground">
                   The reduced rate applies to every open and close fee.

@@ -6,14 +6,14 @@
  */
 
 import { useQuery } from "@tanstack/react-query"
+import type { Position } from "@/lib/graphql/types"
 import { executeGraphQLQuery } from "@/lib/graphql/client"
 import { GET_ACCOUNT_POSITIONS } from "@/lib/graphql/queries"
 import { indexerQueryKeys } from "@/lib/graphql/query-keys"
 import { INDEXER_CONFIG } from "@/app/config/indexer"
-import type { Position } from "@/lib/graphql/types"
 
 export type UseAccountPositionsResult = {
-  data: Position[]
+  data: Array<Position>
   isLoading: boolean
   error: Error | null
   isDisabled: boolean
@@ -51,7 +51,7 @@ export function useAccountPositions(account: string | null): UseAccountPositions
 
   return {
     data: data ?? [],
-    error: error as Error | null,
+    error: error,
     isLoading,
     isDisabled: false,
   }

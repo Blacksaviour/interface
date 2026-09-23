@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
@@ -16,7 +16,7 @@ vi.mock("../lib/pool-transactions", () => ({
   submitPoolWithdrawal: vi.fn(),
 }))
 
-vi.mock("sonner", () => ({
+vi.mock("@workspace/ui/components/toast", () => ({
   toast: {
     loading: vi.fn().mockReturnValue("toast-id"),
     success: vi.fn(),
@@ -126,7 +126,7 @@ describe("PoolTransactionDialog — deposit mode (#328)", () => {
     const user = userEvent.setup()
     renderDialog()
 
-    const inputs = screen.getAllByRole("textbox")
+    const inputs = screen.getAllByRole<HTMLInputElement>("textbox")
     await user.type(inputs[0], "1.5")
 
     expect(inputs[0]).toHaveValue("1.5")
@@ -136,7 +136,7 @@ describe("PoolTransactionDialog — deposit mode (#328)", () => {
     const user = userEvent.setup()
     renderDialog()
 
-    const inputs = screen.getAllByRole("textbox")
+    const inputs = screen.getAllByRole<HTMLInputElement>("textbox")
     await user.type(inputs[1], "25.0")
 
     expect(inputs[1]).toHaveValue("25.0")
@@ -149,7 +149,7 @@ describe("PoolTransactionDialog — deposit mode (#328)", () => {
     const maxButtons = screen.getAllByText("MAX")
     await user.click(maxButtons[0])
 
-    const inputs = screen.getAllByRole("textbox")
+    const inputs = screen.getAllByRole<HTMLInputElement>("textbox")
     expect(inputs[0].value).not.toBe("")
   })
 
@@ -160,7 +160,7 @@ describe("PoolTransactionDialog — deposit mode (#328)", () => {
     const maxButtons = screen.getAllByText("MAX")
     await user.click(maxButtons[1])
 
-    const inputs = screen.getAllByRole("textbox")
+    const inputs = screen.getAllByRole<HTMLInputElement>("textbox")
     expect(inputs[1].value).not.toBe("")
   })
 
@@ -175,7 +175,7 @@ describe("PoolTransactionDialog — deposit mode (#328)", () => {
     const user = userEvent.setup()
     renderDialog()
 
-    const inputs = screen.getAllByRole("textbox")
+    const inputs = screen.getAllByRole<HTMLInputElement>("textbox")
     await user.type(inputs[0], "1.0")
 
     const submitButton = screen.getByText("Queue Deposit")
@@ -186,7 +186,7 @@ describe("PoolTransactionDialog — deposit mode (#328)", () => {
     const user = userEvent.setup()
     renderDialog()
 
-    const inputs = screen.getAllByRole("textbox")
+    const inputs = screen.getAllByRole<HTMLInputElement>("textbox")
     await user.type(inputs[0], "1.0")
 
     await user.click(screen.getByText("Queue Deposit"))
@@ -201,7 +201,7 @@ describe("PoolTransactionDialog — deposit mode (#328)", () => {
     const user = userEvent.setup()
     renderDialog()
 
-    const inputs = screen.getAllByRole("textbox")
+    const inputs = screen.getAllByRole<HTMLInputElement>("textbox")
     await user.type(inputs[0], "1.12345678")
 
     await waitFor(() => {
@@ -225,7 +225,7 @@ describe("PoolTransactionDialog — deposit mode (#328)", () => {
     const user = userEvent.setup()
     renderDialog()
 
-    const inputs = screen.getAllByRole("textbox")
+    const inputs = screen.getAllByRole<HTMLInputElement>("textbox")
     await user.type(inputs[0], "11.0")
 
     await waitFor(() => {
@@ -237,7 +237,7 @@ describe("PoolTransactionDialog — deposit mode (#328)", () => {
     const user = userEvent.setup()
     renderDialog()
 
-    const inputs = screen.getAllByRole("textbox")
+    const inputs = screen.getAllByRole<HTMLInputElement>("textbox")
     await user.type(inputs[1], "11.0")
 
     await waitFor(() => {
@@ -249,7 +249,7 @@ describe("PoolTransactionDialog — deposit mode (#328)", () => {
     const user = userEvent.setup()
     renderDialog()
 
-    const inputs = screen.getAllByRole("textbox")
+    const inputs = screen.getAllByRole<HTMLInputElement>("textbox")
     await user.type(inputs[0], "1.0")
 
     const submitButton = screen.getByText("Queue Deposit")

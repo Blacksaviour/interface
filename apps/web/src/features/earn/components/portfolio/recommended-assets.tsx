@@ -52,14 +52,6 @@ function SO4LogoIcon() {
   )
 }
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <Text size="xs" tone="muted" weight="medium" variant="label" render={<span />}>
-      {children}
-    </Text>
-  )
-}
-
 function SO4Card() {
   const [pending, setPending] = useState(false)
 

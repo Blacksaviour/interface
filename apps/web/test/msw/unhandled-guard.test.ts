@@ -15,7 +15,7 @@
  * temporary handlers are cleaned up automatically after each test.
  */
 import { describe, expect, it, vi } from "vitest"
-import { http, HttpResponse } from "msw"
+import { HttpResponse, http } from "msw"
 import { server } from "./server"
 
 describe("MSW unhandled-request guard", () => {

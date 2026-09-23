@@ -1,16 +1,17 @@
-import { describe, it, expect, afterEach, vi } from "vitest"
+import { afterEach, describe, expect, it, vi } from "vitest"
 import { cleanup, render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import {
-  DistributionsTable,
-  type DistributionRow,
+  
+  DistributionsTable
 } from "./distributions-table"
+import type {DistributionRow} from "./distributions-table";
 
 afterEach(cleanup)
 
 // ── Fixtures ─────────────────────────────────────────────────────────────────
 
-const SINGLE_CLAIM: DistributionRow[] = [
+const SINGLE_CLAIM: Array<DistributionRow> = [
   {
     epoch: "W-12",
     date: "Jun 15, 2026",
@@ -20,7 +21,7 @@ const SINGLE_CLAIM: DistributionRow[] = [
   },
 ]
 
-const MULTI: DistributionRow[] = [
+const MULTI: Array<DistributionRow> = [
   {
     epoch: "W-11",
     date: "Jun 8, 2026",

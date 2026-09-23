@@ -79,7 +79,7 @@ export function parseAmount(raw: string, options: ParseAmountOptions = {}): Pars
   const maxAmount = options.maxAmount
 
   // Empty input — no value yet
-  if (raw === "" || raw === undefined || raw === null) {
+  if (raw === "") {
     return { value: null, isPartial: false, wasClamped: false }
   }
 

@@ -6,14 +6,14 @@
  */
 
 import { useQuery } from "@tanstack/react-query"
+import type { TraderReferral } from "@/lib/graphql/types"
 import { executeGraphQLQuery } from "@/lib/graphql/client"
 import { GET_AFFILIATE_TRADERS } from "@/lib/graphql/queries"
 import { indexerQueryKeys } from "@/lib/graphql/query-keys"
 import { INDEXER_CONFIG } from "@/app/config/indexer"
-import type { TraderReferral } from "@/lib/graphql/types"
 
 export type UseAffiliateTradersResult = {
-  data: TraderReferral[]
+  data: Array<TraderReferral>
   isLoading: boolean
   error: Error | null
   isDisabled: boolean
@@ -51,7 +51,7 @@ export function useAffiliateTraders(owner: string | null): UseAffiliateTradersRe
 
   return {
     data: data ?? [],
-    error: error as Error | null,
+    error: error,
     isLoading,
     isDisabled: false,
   }

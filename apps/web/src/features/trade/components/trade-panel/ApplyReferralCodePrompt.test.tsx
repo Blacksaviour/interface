@@ -1,5 +1,5 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest"
-import { render, screen, fireEvent, waitFor } from "@testing-library/react"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+import { fireEvent, render, screen, waitFor } from "@testing-library/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ApplyReferralCodePrompt } from "./ApplyReferralCodePrompt"
 import * as referralLib from "@/features/referrals/lib/referrals"
@@ -80,7 +80,7 @@ describe("ApplyReferralCodePrompt", () => {
     vi.mocked(contractLib.readStoredReferralCode).mockReturnValueOnce(null)
 
     renderComponent("GTEST")
-    const input = screen.getByPlaceholderText("e.g. MYCODE123") as HTMLInputElement
+    const input = screen.getByPlaceholderText<HTMLInputElement>("e.g. MYCODE123")
     fireEvent.change(input, { target: { value: "mycode" } })
     expect(input.value).toBe("MYCODE")
   })
@@ -90,11 +90,11 @@ describe("ApplyReferralCodePrompt", () => {
     vi.mocked(referralLib.hasCompletedReferralPrompt).mockReturnValueOnce(false)
     vi.mocked(contractLib.readStoredReferralCode).mockReturnValueOnce(null)
     vi.mocked(referralLib.validateReferralCode).mockReturnValueOnce(null)
-    vi.mocked(referralLib.applyReferralCode).mockResolvedValueOnce(undefined)
+    vi.mocked(referralLib.applyReferralCode).mockResolvedValueOnce("txhash")
     vi.mocked(referralLib.markReferralPromptComplete).mockReturnValueOnce(undefined)
 
     renderComponent("GTEST")
-    const input = screen.getByPlaceholderText("e.g. MYCODE123") as HTMLInputElement
+    const input = screen.getByPlaceholderText<HTMLInputElement>("e.g. MYCODE123")
     const button = screen.getByRole("button", { name: /Apply/ })
 
     fireEvent.change(input, { target: { value: "  mycode  " } })
@@ -113,7 +113,7 @@ describe("ApplyReferralCodePrompt", () => {
     vi.mocked(referralLib.validateReferralCode).mockReturnValueOnce("Invalid code format")
 
     renderComponent("GTEST")
-    const input = screen.getByPlaceholderText("e.g. MYCODE123")
+    const input = screen.getByPlaceholderText<HTMLInputElement>("e.g. MYCODE123")
     const button = screen.getByRole("button", { name: /Apply/ })
 
     fireEvent.change(input, { target: { value: "BAD" } })
@@ -131,7 +131,7 @@ describe("ApplyReferralCodePrompt", () => {
     vi.mocked(referralLib.applyReferralCode).mockRejectedValueOnce(new Error("Code not found"))
 
     renderComponent("GTEST")
-    const input = screen.getByPlaceholderText("e.g. MYCODE123")
+    const input = screen.getByPlaceholderText<HTMLInputElement>("e.g. MYCODE123")
     const button = screen.getByRole("button", { name: /Apply/ })
 
     fireEvent.change(input, { target: { value: "BADCODE" } })
@@ -150,7 +150,7 @@ describe("ApplyReferralCodePrompt", () => {
     vi.mocked(referralLib.applyReferralCode).mockImplementationOnce(() => new Promise(() => {}))
 
     renderComponent("GTEST")
-    const input = screen.getByPlaceholderText("e.g. MYCODE123")
+    const input = screen.getByPlaceholderText<HTMLInputElement>("e.g. MYCODE123")
     const button = screen.getByRole("button", { name: /Apply/ })
 
     fireEvent.change(input, { target: { value: "CODE" } })
@@ -178,7 +178,7 @@ describe("ApplyReferralCodePrompt", () => {
     vi.mocked(referralLib.validateReferralCode).mockReturnValueOnce("Invalid format")
 
     renderComponent("GTEST")
-    const input = screen.getByPlaceholderText("e.g. MYCODE123")
+    const input = screen.getByPlaceholderText<HTMLInputElement>("e.g. MYCODE123")
     const button = screen.getByRole("button", { name: /Apply/ })
 
     fireEvent.change(input, { target: { value: "BAD" } })
@@ -212,7 +212,7 @@ describe("ApplyReferralCodePrompt", () => {
     vi.mocked(referralLib.hasCompletedReferralPrompt).mockReturnValueOnce(false)
 
     renderComponent("GTEST")
-    const input = screen.getByPlaceholderText("e.g. MYCODE123") as HTMLInputElement
+    const input = screen.getByPlaceholderText<HTMLInputElement>("e.g. MYCODE123")
     expect(input.value).toBe("STORED")
   })
 })

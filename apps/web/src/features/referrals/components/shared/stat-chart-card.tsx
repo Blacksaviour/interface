@@ -1,6 +1,5 @@
 import { Card } from "@workspace/ui/components/card"
 import { cn } from "@workspace/ui/lib/utils"
-import type { NumericRole } from "@workspace/ui/components/numeric"
 import type { TimePeriod } from "../../hooks/use-referrals-data"
 import { formatUsd } from "@/shared/lib/format"
 
@@ -40,12 +39,6 @@ function InfoIcon({ className }: InfoIconProps) {
 }
 
 type Accent = "green" | "blue"
-
-/** Accent → semantic token + matching numeric role. */
-const ACCENTS: Record<Accent, { stroke: string; role: NumericRole }> = {
-  green: { stroke: "var(--success)", role: "positive" },
-  blue: { stroke: "var(--info)", role: "neutral" },
-}
 
 type Props = {
   title: string

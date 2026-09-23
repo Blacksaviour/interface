@@ -8,11 +8,12 @@ import { cn } from "@workspace/ui/lib/utils"
 // in-progress order draft or input focus, and safe-area padding keeps the
 // bar clear of home-indicator gestures.
 
-export const MOBILE_TRADE_VIEWS = ["chart", "trade", "positions"] as const
+export const MOBILE_TRADE_VIEWS = ["chart", "book", "trade", "positions"] as const
 export type MobileTradeView = (typeof MOBILE_TRADE_VIEWS)[number]
 
 const VIEW_LABELS: Record<MobileTradeView, string> = {
   chart: "Chart",
+  book: "Book",
   trade: "Trade",
   positions: "Positions",
 }

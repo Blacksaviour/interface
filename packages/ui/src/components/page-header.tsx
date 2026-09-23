@@ -2,7 +2,10 @@ import * as React from "react"
 
 import { cn } from "@workspace/ui/lib/utils"
 
-export interface PageHeaderProps extends React.ComponentProps<"header"> {
+export interface PageHeaderProps extends Omit<
+  React.ComponentProps<"header">,
+  "title"
+> {
   /** Page title — the primary heading. */
   title: React.ReactNode
   /** Subtitle / description text rendered below the title. */
@@ -57,9 +60,7 @@ function PageHeader({
           )}
 
           {description != null && (
-            <p className="mt-1 text-sm text-muted-foreground">
-              {description}
-            </p>
+            <p className="mt-1 text-sm text-muted-foreground">{description}</p>
           )}
 
           {metadata != null && (

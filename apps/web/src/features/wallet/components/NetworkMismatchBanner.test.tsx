@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, afterEach, beforeAll, vi } from "vitest"
-import { render, screen, fireEvent } from "@testing-library/react"
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest"
+import { fireEvent, render, screen } from "@testing-library/react"
 import { useWalletStore } from "../store/wallet-store"
 import { NetworkMismatchBanner } from "./NetworkMismatchBanner"
 import { NETWORK } from "@/app/config/network"

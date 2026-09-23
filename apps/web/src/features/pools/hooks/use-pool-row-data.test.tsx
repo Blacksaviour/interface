@@ -7,8 +7,6 @@ import {
   getFundingRatePerHourPct,
   getOpenInterestUsd,
   getPoolTvlUsd,
-  rawToDisplay,
-  usdRawToDisplay,
 } from "../lib/pool-math"
 import type { FundingInfo, MarketProps, PoolValueInfo } from "@/lib/contracts"
 import type { PoolMarketConfig } from "../data/markets"
@@ -148,7 +146,7 @@ function createWrapper() {
 
 // ── Tests ────────────────────────────────────────────────────────────────────
 
-let usePoolRowData: UsePoolRowDataType
+let usePoolRowData: typeof UsePoolRowDataType
 
 describe("usePoolRowData", () => {
   beforeAll(async () => {

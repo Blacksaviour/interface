@@ -1,6 +1,6 @@
 # Contributing to `@workspace/ui`
 
-`packages/ui` is the shared component library consumed by `apps/web` (and any future app in this monorepo) via the `@workspace/ui/*` import alias. This guide covers adding, testing, documenting, and exporting a component here — see the root [`CONTRIBUTING.md`](../../CONTRIBUTING.md) for the general repo workflow (branch naming, commit format, PR checklist).
+`packages/ui` is the shared component library consumed by `apps/web` (and any future app in this monorepo) via the `@workspace/ui/*` import alias. This guide covers adding, testing, documenting, and exporting a component here — see the [design-system PR checklist](../../.github/PULL_REQUEST_TEMPLATE/design-system.md) for the pull-request requirements specific to token and shared-component changes.
 
 ## Does this belong in `packages/ui`, or in a feature?
 
@@ -31,6 +31,7 @@ If you're unsure, default to the feature directory — it's a much smaller chang
    then add a `"test": "vitest run"` script to this package's `package.json` and a `component-name.test.tsx` alongside the component, following the render/assert patterns already used in `apps/web/src/**/*.test.tsx`.
 5. **Export**: add both the component and its prop-types export to whichever consumer imports it via `@workspace/ui/components/<file>` — no central barrel file exists (each component is its own subpath export per `package.json`'s `exports` map), so there's no index to update.
 6. **Document in the gallery**: add your component to [`apps/web/src/features/gallery/components/gallery-page.tsx`](../../apps/web/src/features/gallery/components/gallery-page.tsx), rendering every variant/size it supports. This is how reviewers and future contributors discover what exists and see every state at a glance — see [`DESIGN.md`](../../DESIGN.md#the-component-gallery-gallery) for why it exists.
+7. **Log in the changelog**: if the change is user-observable (new component, API change, deprecation, accessibility fix, token addition), add an entry to [`CHANGELOG.md`](./CHANGELOG.md) under the correct section — see the file's header for the expected sections. Breaking changes require a `### Migration note` subsection.
 
 ## Commands
 
@@ -43,7 +44,11 @@ bun run check:tokens                        # design-token usage check (whole re
 bun run test:e2e -- design-system-visual   # visual regression, once your component is in the gallery
 ```
 
-All four should be clean before opening a PR that touches this package — the same bar as the root [`CONTRIBUTING.md`](../../CONTRIBUTING.md) sets for the rest of the repo.
+All four should be clean before opening a PR that touches this package.
+
+## Pull request
+
+Before opening or requesting review on a PR that touches `packages/ui` or the design tokens, run through the [design-system PR checklist](../../.github/PULL_REQUEST_TEMPLATE/design-system.md). It covers theme verification, keyboard accessibility, mobile layout, visual regression snapshots, API compatibility, the token check, and changelog entry requirements.
 
 ## Further reading
 

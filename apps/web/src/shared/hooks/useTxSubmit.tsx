@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react"
-import { toast } from "sonner"
+import { toast } from "@workspace/ui/components/toast"
 import { sendAndPoll } from "@/lib/tx-builder"
 import { explorerTxUrl } from "@/app/config/network"
 

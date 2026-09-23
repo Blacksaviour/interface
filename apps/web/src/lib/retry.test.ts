@@ -46,17 +46,17 @@ afterEach(() => {
  * Repeated until the promise settles.
  */
 async function driveRetry<T>(promise: Promise<T>): Promise<T> {
-  let settled = false
+  const state = { settled: false }
   let resolvedValue: T
   let rejectedError: unknown
 
   promise.then(
-    (v) => { settled = true; resolvedValue = v as T },
-    (e) => { settled = true; rejectedError = e },
+    (v) => { state.settled = true; resolvedValue = v },
+    (e) => { state.settled = true; rejectedError = e },
   )
 
   // Drive until settled — max 20 rounds to guard against infinite loops
-  for (let i = 0; i < 20 && !settled; i++) {
+  for (let i = 0; i < 20 && !state.settled; i++) {
     await Promise.resolve()        // flush microtasks
     await vi.runAllTimersAsync()   // advance all timers + their microtasks
     await Promise.resolve()        // flush any new microtasks created
@@ -311,7 +311,7 @@ describe("shouldRetry predicate", () => {
   })
 
   it("receives the current attempt number (1-indexed)", async () => {
-    const calls: number[] = []
+    const calls: Array<number> = []
     const fn = vi.fn()
       .mockRejectedValueOnce(new Error("e"))
       .mockRejectedValueOnce(new Error("e"))

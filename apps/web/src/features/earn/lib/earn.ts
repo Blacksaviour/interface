@@ -1,4 +1,4 @@
-import { toast } from "sonner"
+import { toast } from "@workspace/ui/components/toast"
 import { GLV_VAULTS, GM_POOLS } from "../data/pools"
 import { submitTx } from "@/shared/hooks/useTxSubmit"
 import { NETWORK } from "@/app/config/network"

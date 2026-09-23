@@ -6,7 +6,7 @@ import { LeverageSlider } from "./LeverageSlider"
 // The Slider component (Base UI) renders a visually-hidden <input type="range">
 // for accessibility. Use { hidden: true } when querying role="slider".
 function getSlider() {
-  return screen.getByRole("slider", { hidden: true }) as HTMLInputElement
+  return screen.getByRole("slider", { hidden: true })
 }
 
 afterEach(() => {

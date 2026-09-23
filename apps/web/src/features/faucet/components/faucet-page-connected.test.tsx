@@ -1,12 +1,12 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { render, screen, waitFor } from "@testing-library/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { HttpResponse, http } from "msw"
 import { Account, Networks, TransactionBuilder, nativeToScVal, rpc } from "@stellar/stellar-sdk"
+import { FaucetPage } from "./faucet-page"
 import { useWalletStore } from "@/features/wallet/store/wallet-store"
 import { server } from "@/test/msw/server"
 import { fakeWalletAddress } from "@/test/fakes/wallet"
-import { FaucetPage } from "./faucet-page"
 
 // ── Fixed seed values ─────────────────────────────────────────────────────────
 // fromContractAmount divides raw bigint by 1e7
@@ -50,7 +50,7 @@ vi.mock("@/features/wallet/hooks/useNetwork", () => ({
 function tryGetFunctionName(txXdr: string): string {
   try {
     const tx = TransactionBuilder.fromXDR(txXdr, Networks.TESTNET)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const op = tx.operations[0] as any
     if (op?.type !== "invokeHostFunction") return ""
     // op.func is xdr.HostFunction; .value() returns InvokeContractArgs

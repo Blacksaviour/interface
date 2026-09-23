@@ -188,9 +188,9 @@ export function CollateralDialog({ position, mode, open, onClose }: Props) {
                 value={amount}
                 disabled={isSubmitting}
                 onChange={(e) => setAmount(e.target.value)}
-                className="pr-16 font-mono text-sm"
+                className="pe-16 font-mono text-sm"
               />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">
+              <span className="absolute inset-inline-end-3 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">
                 {tokenSymbol}
               </span>
             </div>

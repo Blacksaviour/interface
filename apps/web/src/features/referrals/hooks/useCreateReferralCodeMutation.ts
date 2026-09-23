@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query"
-import { useWalletStore } from "@/features/wallet/store/wallet-store"
 import { createAffiliateCode } from "../lib/referrals"
+import { useWalletStore } from "@/features/wallet/store/wallet-store"
 
 export function useCreateReferralCodeMutation() {
   const { address } = useWalletStore()

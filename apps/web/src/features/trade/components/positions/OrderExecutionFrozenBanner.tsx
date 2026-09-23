@@ -28,7 +28,7 @@ export function OrderExecutionFrozenBanner({ visible }: Props) {
       <button
         type="button"
         onClick={dismiss}
-        className="ml-4 shrink-0 font-medium underline-offset-2 hover:underline"
+        className="ms-4 shrink-0 font-medium underline-offset-2 hover:underline"
         aria-label="Dismiss order execution paused notice"
       >
         Dismiss

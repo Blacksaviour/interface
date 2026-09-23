@@ -2,11 +2,23 @@ import * as React from 'react'
 
 import { cn } from '@workspace/ui/lib/utils'
 import { Skeleton } from '@workspace/ui/components/skeleton'
+import { EmptyState } from '@workspace/ui/components/empty-state'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableEmptyRow,
+  TableHead,
+  TableHeadRow,
+  TableHeader,
+  TableRow,
+} from '@workspace/ui/components/table'
 
 interface Column<T> {
   id: string
   header: string
   accessor: (row: T) => React.ReactNode
+  align?: 'left' | 'right'
   className?: string
 }
 
@@ -18,6 +30,7 @@ interface DataTableProps<T> {
   emptyAction?: React.ReactNode
   keyExtractor: (row: T) => string
   onRowClick?: (row: T) => void
+  selectedRowKey?: string
   className?: string
 }
 
@@ -29,59 +42,64 @@ function DataTable<T>({
   emptyAction,
   keyExtractor,
   onRowClick,
+  selectedRowKey,
   className,
 }: DataTableProps<T>) {
   if (isLoading) {
     return (
-      <div data-slot="data-table-loading" className={cn('space-y-1', className)}>
-        {[0, 1, 2].map((i) => (
-          <div key={i} className="flex items-center gap-4 px-4 py-3">
-            {columns.map((col) => (
-              <Skeleton
-                key={col.id}
-                className={cn('h-4 flex-1', col.className)}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
+      <Table containerClassName={className}>
+        <TableBody>
+          {[0, 1, 2].map((i) => (
+            <TableRow key={i} interactive={false}>
+              {columns.map((col) => (
+                <TableCell key={col.id} align={col.align}>
+                  <Skeleton className="h-4 w-full" />
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     )
   }
 
   if (data.length === 0) {
+    const colSpan = columns.length || 1
     return (
-      <div
-        data-slot="data-table-empty"
-        className={cn(
-          'flex flex-col items-center justify-center gap-3 py-16 text-center',
-          className,
-        )}
-      >
-        <p className="text-sm text-muted-foreground">{emptyMessage}</p>
-        {emptyAction}
-      </div>
+      <Table containerClassName={className}>
+        <TableBody>
+          <TableEmptyRow colSpan={colSpan}>
+            <EmptyState
+              title={emptyMessage}
+              actions={emptyAction ? { primary: emptyAction } : undefined}
+            />
+          </TableEmptyRow>
+        </TableBody>
+      </Table>
     )
   }
 
   return (
-    <div data-slot="data-table" className={cn('overflow-x-auto', className)}>
-      <table className="w-full text-xs">
-        <thead>
-          <tr className="border-b border-border bg-muted/20 text-left">
-            {columns.map((col) => (
-              <th
-                key={col.id}
-                className={cn('px-5 py-3 font-medium text-muted-foreground', col.className)}
-              >
-                {col.header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row) => (
-            <tr
-              key={keyExtractor(row)}
+    <Table containerClassName={className}>
+      <TableHeader>
+        <TableHeadRow>
+          {columns.map((col) => (
+            <TableHead key={col.id} align={col.align} className={col.className}>
+              {col.header}
+            </TableHead>
+          ))}
+        </TableHeadRow>
+      </TableHeader>
+      <TableBody>
+        {data.map((row) => {
+          const key = keyExtractor(row)
+          const isSelected = selectedRowKey !== undefined && selectedRowKey === key
+
+          return (
+            <TableRow
+              key={key}
+              interactive={!!onRowClick}
+              aria-current={isSelected ? 'true' : undefined}
               tabIndex={onRowClick ? 0 : undefined}
               onKeyDown={
                 onRowClick
@@ -94,24 +112,18 @@ function DataTable<T>({
                   : undefined
               }
               onClick={onRowClick ? () => onRowClick(row) : undefined}
-              className={cn(
-                'border-b border-border/40 transition-colors last:border-b-0',
-                onRowClick && 'cursor-pointer hover:bg-muted/20',
-              )}
+              className={cn(onRowClick && 'cursor-pointer', isSelected && 'bg-muted/30')}
             >
               {columns.map((col) => (
-                <td
-                  key={col.id}
-                  className={cn('px-5 py-3.5', col.className)}
-                >
+                <TableCell key={col.id} align={col.align} className={col.className}>
                   {col.accessor(row)}
-                </td>
+                </TableCell>
               ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+            </TableRow>
+          )
+        })}
+      </TableBody>
+    </Table>
   )
 }
 

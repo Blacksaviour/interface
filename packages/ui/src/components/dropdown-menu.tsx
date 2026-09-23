@@ -4,8 +4,8 @@ import * as React from "react"
 import { Menu as MenuPrimitive } from "@base-ui/react/menu"
 
 import { CheckmarkCircle01Icon, RadioButtonIcon } from "@hugeicons/core-free-icons"
-import { HugeiconsIcon } from "@hugeicons/react"
 import { cn } from "@workspace/ui/lib/utils"
+import { Icon } from "./icon"
 
 function DropdownMenu({ ...props }: MenuPrimitive.Root.Props) {
   return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />
@@ -79,19 +79,18 @@ function DropdownMenuCheckboxItem({
     <MenuPrimitive.CheckboxItem
       data-slot="dropdown-menu-checkbox-item"
       className={cn(
-        "relative flex w-full cursor-default select-none items-center gap-2 rounded-lg py-1.5 pr-2 pl-8 text-xs/relaxed outline-none data-highlighted:bg-accent data-highlighted:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&>svg]:size-3.5 [&>svg]:shrink-0",
+        "relative flex w-full cursor-default select-none items-center gap-2 rounded-lg py-1.5 pe-2 ps-8 text-xs/relaxed outline-none data-highlighted:bg-accent data-highlighted:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&>svg]:size-3.5 [&>svg]:shrink-0",
         className
       )}
       {...props}
     >
       <MenuPrimitive.CheckboxItemIndicator
         data-slot="dropdown-menu-checkbox-item-indicator"
-        className="absolute left-2 inline-flex items-center justify-center"
+        className="absolute inset-inline-start-2 inline-flex items-center justify-center"
       >
-        <HugeiconsIcon
+        <Icon
           icon={CheckmarkCircle01Icon}
-          strokeWidth={2}
-          className="size-3.5"
+          size="sm"
         />
       </MenuPrimitive.CheckboxItemIndicator>
       {children}
@@ -117,19 +116,18 @@ function DropdownMenuRadioItem({
     <MenuPrimitive.RadioItem
       data-slot="dropdown-menu-radio-item"
       className={cn(
-        "relative flex w-full cursor-default select-none items-center gap-2 rounded-lg py-1.5 pr-2 pl-8 text-xs/relaxed outline-none data-highlighted:bg-accent data-highlighted:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&>svg]:size-3.5 [&>svg]:shrink-0",
+        "relative flex w-full cursor-default select-none items-center gap-2 rounded-lg py-1.5 pe-2 ps-8 text-xs/relaxed outline-none data-highlighted:bg-accent data-highlighted:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&>svg]:size-3.5 [&>svg]:shrink-0",
         className
       )}
       {...props}
     >
       <MenuPrimitive.RadioItemIndicator
         data-slot="dropdown-menu-radio-item-indicator"
-        className="absolute left-2 inline-flex items-center justify-center"
+        className="absolute inset-inline-start-2 inline-flex items-center justify-center"
       >
-        <HugeiconsIcon
+        <Icon
           icon={RadioButtonIcon}
-          strokeWidth={2}
-          className="size-3.5"
+          size="sm"
         />
       </MenuPrimitive.RadioItemIndicator>
       {children}
@@ -149,7 +147,7 @@ function DropdownMenuGroupLabel({
     <MenuPrimitive.GroupLabel
       data-slot="dropdown-menu-group-label"
       className={cn(
-        "px-2 py-1.5 text-[0.625rem] font-medium text-muted-foreground",
+        "px-2 py-1.5 text-10 font-medium text-muted-foreground",
         className
       )}
       {...props}
@@ -178,7 +176,7 @@ function DropdownMenuShortcut({
     <span
       data-slot="dropdown-menu-shortcut"
       className={cn(
-        "ml-auto text-[0.625rem] tracking-widest text-muted-foreground",
+        "ms-auto text-10 tracking-widest text-muted-foreground",
         className
       )}
       {...props}

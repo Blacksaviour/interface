@@ -4,6 +4,7 @@ import type { ErrorInfo, ReactNode } from "react"
 import { useWalletStore } from "@/features/wallet/store/wallet-store"
 import { NETWORK } from "@/app/config/network"
 import { ThemeProvider } from "@/ui/theme-provider"
+import { DirectionProvider } from "@/ui/direction-provider"
 import { ErrorPage } from "@/app/error-page"
 import { validateIndexerConfig } from "@/app/config/indexer"
 import { useIndexerInvalidation } from "@/lib/graphql/use-indexer-invalidation"
@@ -149,7 +150,9 @@ export function AppProviders({ children }: { children: ReactNode }) {
     <ErrorBoundary>
       <QueryProvider>
         <WalletProvider>
-          <ThemeProvider>{children}</ThemeProvider>
+          <ThemeProvider>
+            <DirectionProvider>{children}</DirectionProvider>
+          </ThemeProvider>
         </WalletProvider>
       </QueryProvider>
     </ErrorBoundary>

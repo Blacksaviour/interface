@@ -22,44 +22,69 @@ type LegacyNumericRole = VariantProps<typeof numericVariants>['role']
 
 interface NumericProps {
   value: number | null | undefined
-  format?: 'usd' | 'token' | 'pct' | 'number'
+  format?: 'usd' | 'token' | 'pct' | 'number' | 'small'
   role?: LegacyNumericRole
   decimals?: number
   compact?: boolean
+  locale?: string
+  currency?: string
   fallback?: string
+  threshold?: number
   className?: string
 }
 
-function formatUsd(value: number, compact?: boolean): string {
-  if (compact) {
-    if (Math.abs(value) >= 1_000_000_000) {
-      return `$${(value / 1_000_000_000).toFixed(1)}B`
-    }
-    if (Math.abs(value) >= 1_000_000) {
-      return `$${(value / 1_000_000).toFixed(1)}M`
-    }
-    if (Math.abs(value) >= 1_000) {
-      return `$${(value / 1_000).toFixed(1)}K`
-    }
-  }
-  return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+const DEFAULT_LOCALE = "en-US"
+const SMALL_THRESHOLD = 0.0001
+
+function normalize(n: number): number {
+  return Object.is(n, -0) ? 0 : n
 }
 
-function formatToken(value: number, decimals?: number): string {
+function formatUsd(value: number, compact?: boolean, locale?: string, currency?: string): string {
+  const loc = locale ?? DEFAULT_LOCALE
+  const curr = currency ?? "USD"
+  const dec = compact ? 0 : 2
+  return new Intl.NumberFormat(loc, {
+    style: "currency",
+    currency: curr,
+    minimumFractionDigits: dec,
+    maximumFractionDigits: 2,
+    ...(compact ? { notation: "compact" as const } : {}),
+  }).format(normalize(value))
+}
+
+function formatToken(value: number, decimals?: number, locale?: string): string {
   const maxDecimals = decimals ?? 4
-  return value.toLocaleString('en-US', {
+  return normalize(value).toLocaleString(locale ?? DEFAULT_LOCALE, {
     minimumFractionDigits: 0,
     maximumFractionDigits: maxDecimals,
   })
 }
 
 function formatPct(value: number): string {
-  const sign = value > 0 ? '+' : ''
-  return `${sign}${value.toFixed(2)}%`
+  const v = normalize(value)
+  const sign = v > 0 ? '+' : ''
+  return `${sign}${v.toFixed(2)}%`
 }
 
-function formatNumber(value: number): string {
-  return value.toLocaleString('en-US')
+function formatNumber(value: number, locale?: string): string {
+  return normalize(value).toLocaleString(locale ?? DEFAULT_LOCALE)
+}
+
+function formatSmall(value: number, decimals?: number, threshold?: number, locale?: string): string {
+  const v = normalize(value)
+  const dec = decimals ?? 4
+  const thresh = threshold ?? SMALL_THRESHOLD
+  if (v !== 0 && Math.abs(v) < thresh) {
+    return `<${thresh.toLocaleString(locale ?? DEFAULT_LOCALE, {
+      minimumFractionDigits: dec,
+      maximumFractionDigits: dec,
+    })}`
+  }
+  return v.toLocaleString(locale ?? DEFAULT_LOCALE, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: dec,
+  })
 }
 
 /**
@@ -80,10 +105,10 @@ const numericTextVariants = cva("font-mono tabular-nums slashed-zero", {
       muted: "text-muted-foreground",
     },
     size: {
-      "2xs": "text-[0.625rem] leading-4",
-      xs: "text-[0.6875rem] leading-4",
+      "2xs": "text-10 leading-4",
+      xs: "text-11 leading-4",
       sm: "text-xs leading-5",
-      md: "text-[0.8125rem] leading-5",
+      md: "text-13 leading-5",
       base: "text-sm leading-5",
       lg: "text-base leading-6",
     },
@@ -131,7 +156,10 @@ function Numeric({
   role = 'neutral',
   decimals,
   compact = false,
+  locale,
+  currency,
   fallback = '\u2014',
+  threshold,
   className,
 }: NumericProps) {
   const display = (() => {
@@ -140,13 +168,15 @@ function Numeric({
     }
     switch (format) {
       case 'usd':
-        return formatUsd(value, compact)
+        return formatUsd(value, compact, locale, currency)
       case 'token':
-        return formatToken(value, decimals)
+        return formatToken(value, decimals, locale)
       case 'pct':
         return formatPct(value)
+      case 'small':
+        return formatSmall(value, decimals, threshold, locale)
       case 'number':
-        return formatNumber(value)
+        return formatNumber(value, locale)
     }
   })()
 

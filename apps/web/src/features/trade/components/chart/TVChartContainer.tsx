@@ -1,6 +1,17 @@
 import { CandlestickSeries, LineStyle, createChart } from "lightweight-charts"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { Skeleton } from "@workspace/ui/components/skeleton"
+import { VisuallyHidden } from "@workspace/ui/components/visually-hidden"
+import { LiveRegion, useAnnouncer } from "@workspace/ui/components/live-region"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeadRow,
+  TableHeader,
+  TableRow,
+} from "@workspace/ui/components/table"
 import { useOracleCandles } from "../../hooks/useOracleCandles"
 import { useLiveBar } from "../../hooks/useLiveBar"
 import { usePositions } from "../../hooks/usePositions"
@@ -12,6 +23,7 @@ import {
 } from "../../lib/chart-theme"
 import type {CandlestickData, IChartApi, IPriceLine, ISeriesApi, UTCTimestamp} from "lightweight-charts";
 import type { OhlcBar } from "../../lib/oracle"
+import { formatUsd } from "@/shared/lib/format"
 
 type ChartLine = {
   id: string
@@ -24,6 +36,52 @@ type ChartLine = {
 type Props = {
   symbol: string
   period: string
+}
+
+type ChartSummary = {
+  timeRange: string
+  latestPrice: string
+  trend: string
+  description: string
+}
+
+function getChartSummary(
+  candles: Array<OhlcBar>,
+  liveBar: OhlcBar | null,
+  symbol: string,
+  period: string,
+): ChartSummary | null {
+  if (candles.length === 0) return null
+  const first = candles[0]
+  const last = candles[candles.length - 1]
+  const latest = liveBar ?? last
+  const start = new Date(first.time * 1000).toLocaleDateString()
+  const end = new Date(last.time * 1000).toLocaleDateString()
+  const timeRange = first.time === last.time ? start : `${start} – ${end}`
+  const latestPrice = formatUsd(latest.close, { decimals: 4 })
+  const mid = (candles[0].open + last.close) / 2
+  const change = mid === 0 ? 0 : ((last.close - candles[0].open) / mid) * 100
+  const trend = change > 0.5 ? "upward" : change < -0.5 ? "downward" : "sideways"
+  const description =
+    `${period} chart for ${symbol}. ` +
+    `Range: ${timeRange}. ` +
+    `Latest: ${latestPrice}. ` +
+    `Trend: ${trend}.`
+  return { timeRange, latestPrice, trend, description }
+}
+
+function getRepresentativeRows(
+  candles: Array<OhlcBar>,
+  maxRows = 15,
+): Array<OhlcBar> {
+  if (candles.length <= maxRows) return candles
+  const step = Math.floor((candles.length - 2) / (maxRows - 2))
+  const rows: Array<OhlcBar> = [candles[0]]
+  for (let i = 1; i < maxRows - 1; i++) {
+    rows.push(candles[i * step])
+  }
+  rows.push(candles[candles.length - 1])
+  return rows
 }
 
 function toChartBar(bar: OhlcBar): CandlestickData<UTCTimestamp> {
@@ -45,12 +103,21 @@ export function TVChartContainer({ symbol, period }: Props) {
   // Prevents series.update() from firing against an empty or stale series.
   const hasDataRef = useRef(false)
 
-  const { data: candles = [], isLoading } = useOracleCandles(symbol, period)
+  const { data: candles = [], isLoading, isError } = useOracleCandles(symbol, period)
   const liveBar = useLiveBar(symbol, period)
   const { data: positions = [] } = usePositions()
 
+  const [showTable, setShowTable] = useState(false)
+  const lastAnnounceRef = useRef(0)
+  const announcer = useAnnouncer()
+
   // Bumped by the theme observer below so colour-dependent effects re-run.
   const [themeVersion, setThemeVersion] = useState(0)
+
+  const hasData = candles.length > 0
+  const isIdle = !isLoading && !hasData && !isError
+  const summary = useMemo(() => getChartSummary(candles, liveBar, symbol, period), [candles, liveBar, symbol, period])
+  const tableRows = useMemo(() => getRepresentativeRows(candles), [candles])
 
   // ── Mount chart once ───────────────────────────────────────────────────────
   useEffect(() => {
@@ -197,14 +264,115 @@ export function TVChartContainer({ symbol, period }: Props) {
     })
   }, [positions, symbol, themeVersion])
 
+  // ── Throttled live-price announcements ────────────────────────────────────
+  const THROTTLE_MS = 5000
+  useEffect(() => {
+    if (!liveBar || !summary) return
+    const now = Date.now()
+    if (now - lastAnnounceRef.current < THROTTLE_MS) return
+    lastAnnounceRef.current = now
+    announcer.announce(`${symbol} ${summary.latestPrice}`)
+  }, [liveBar, summary, symbol, announcer])
+
   return (
-    <div className="relative h-full w-full">
-      {isLoading && (
-        <div className="absolute inset-0 z-10 flex flex-col gap-1 p-2">
-          <Skeleton className="h-full w-full rounded-none opacity-50" />
+    <div className="relative flex h-full w-full flex-col">
+      {/* ═══ Chart area ═══════════════════════════════════════════════════════ */}
+      <div className="relative min-h-0 flex-1">
+        {/* Accessible summary for screen readers */}
+        {summary && (
+          <VisuallyHidden id="chart-desc">
+            {summary.description}
+          </VisuallyHidden>
+        )}
+
+        {/* Loading skeleton */}
+        {isLoading && (
+          <div className="absolute inset-0 z-10 flex flex-col gap-1 p-2" role="status" aria-label={`Loading ${period} chart data for ${symbol}…`}>
+            <Skeleton className="h-full w-full rounded-none opacity-50" />
+            <VisuallyHidden>Loading {period} chart data for {symbol}…</VisuallyHidden>
+          </div>
+        )}
+
+        {/* Empty state */}
+        {isIdle && (
+          <div role="status" className="flex h-full items-center justify-center text-xs text-muted-foreground">
+            No trading data available for {symbol}
+          </div>
+        )}
+
+        {/* Error state */}
+        {isError && (
+          <div role="alert" className="flex h-full items-center justify-center text-xs text-destructive">
+            Unable to load chart data for {symbol}
+          </div>
+        )}
+
+        {/* Lightweight Charts canvas — hidden from AT; the VisuallyHidden summary replaces it */}
+        <div
+          ref={containerRef}
+          className="h-full w-full"
+          role="img"
+          aria-label={`Price chart for ${symbol}`}
+          aria-describedby="chart-desc"
+          aria-hidden={isIdle || isError}
+        />
+      </div>
+
+      {/* ═══ Data-table fallback ══════════════════════════════════════════════ */}
+      {hasData && tableRows.length > 0 && (
+        <div className="border-t border-border">
+          <button
+            type="button"
+            onClick={() => setShowTable((v) => !v)}
+            className="flex w-full items-center justify-between px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
+            aria-expanded={showTable}
+            aria-controls="ohlc-data-table"
+          >
+            <span className="font-medium">{symbol} OHLC Data</span>
+            <span aria-hidden="true">{showTable ? "▲ Hide" : "▼ Show"}</span>
+          </button>
+
+          {showTable && (
+            <div className="overflow-x-auto px-3 pb-2" id="ohlc-data-table">
+              <Table>
+                <TableHeader>
+                  <TableHeadRow>
+                    <TableHead>
+                      <span className="sr-only">Time</span>
+                      <span aria-hidden="true">Date</span>
+                    </TableHead>
+                    <TableHead align="right">Open</TableHead>
+                    <TableHead align="right">High</TableHead>
+                    <TableHead align="right">Low</TableHead>
+                    <TableHead align="right">Close</TableHead>
+                  </TableHeadRow>
+                </TableHeader>
+                <TableBody>
+                  {tableRows.map((bar) => (
+                    <TableRow key={bar.time} interactive={false}>
+                      <TableCell>
+                        {new Date(bar.time * 1000).toLocaleString()}
+                      </TableCell>
+                      <TableCell align="right">{formatUsd(bar.open, { decimals: 4 })}</TableCell>
+                      <TableCell align="right">{formatUsd(bar.high, { decimals: 4 })}</TableCell>
+                      <TableCell align="right">{formatUsd(bar.low, { decimals: 4 })}</TableCell>
+                      <TableCell align="right">{formatUsd(bar.close, { decimals: 4 })}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
         </div>
       )}
-      <div ref={containerRef} className="h-full w-full" />
+
+      {/* ═══ Live price announcer (throttled, polite) ════════════════════════ */}
+      <LiveRegion
+        message={announcer.message}
+        announcementKey={announcer.announcementKey}
+        mode="polite"
+        atomic
+      />
     </div>
   )
 }

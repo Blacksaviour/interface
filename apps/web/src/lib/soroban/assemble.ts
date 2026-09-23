@@ -15,11 +15,12 @@
  */
 
 import {
-  rpc as StellarRpc,
-  Transaction,
-  FeeBumpTransaction,
-  TransactionBuilder,
+  rpc as StellarRpc
 } from "@stellar/stellar-sdk"
+import type {
+  FeeBumpTransaction,
+  Transaction,
+  TransactionBuilder} from "@stellar/stellar-sdk";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -98,8 +99,7 @@ export function assembleTx(
   }
 
   // Extract minResourceFee — present on success and restore responses.
-  const minResourceFee: string =
-    (parsed as StellarRpc.Api.SimulateTransactionSuccessResponse).minResourceFee ?? "0"
+  const minResourceFee: string = parsed.minResourceFee
 
   const builder = StellarRpc.assembleTransaction(raw, simulation)
 
@@ -120,5 +120,5 @@ export function assembleAndBuild(
     | StellarRpc.Api.RawSimulateTransactionResponse,
 ): Transaction {
   const { builder } = assembleTx(raw, simulation)
-  return builder.build() as Transaction
+  return builder.build()
 }

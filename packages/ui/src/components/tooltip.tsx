@@ -64,7 +64,7 @@ function TooltipContent({
         <TooltipPrimitive.Popup
           data-slot="tooltip-content"
           className={cn(
-            "z-50 max-w-xs origin-(--transform-origin) rounded-md bg-popover px-3 py-1.5 text-xs text-popover-foreground ring-1 ring-foreground/10 shadow-md has-data-[slot=tooltip-description]:flex-col has-data-[slot=tooltip-description]:items-start has-data-[slot=tooltip-description]:gap-0 data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:ml-auto **:data-[slot=kbd]:rounded-sm **:data-[slot=kbd]:border **:data-[slot=kbd]:border-border **:data-[slot=kbd]:bg-muted **:data-[slot=kbd]:px-1 **:data-[slot=kbd]:py-0.5 **:data-[slot=kbd]:text-[0.625rem] **:data-[slot=kbd]:font-mono **:data-[slot=kbd]:leading-none data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+            "z-50 max-w-xs origin-(--transform-origin) rounded-md bg-popover px-3 py-1.5 text-xs text-popover-foreground ring-1 ring-foreground/10 shadow-md has-data-[slot=tooltip-description]:flex-col has-data-[slot=tooltip-description]:items-start has-data-[slot=tooltip-description]:gap-0 data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-inline-start-2 data-[side=inline-start]:slide-in-from-inline-end-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:ms-auto **:data-[slot=kbd]:rounded-sm **:data-[slot=kbd]:border **:data-[slot=kbd]:border-border **:data-[slot=kbd]:bg-muted **:data-[slot=kbd]:px-1 **:data-[slot=kbd]:py-0.5 **:data-[slot=kbd]:text-10 **:data-[slot=kbd]:font-mono **:data-[slot=kbd]:leading-none data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
             className
           )}
           {...props}
@@ -72,7 +72,7 @@ function TooltipContent({
           {children}
           {/* rounded-[2px]: ds-allow: isolated visual-polish on the rotated arrow tip,
               not part of the app's --radius scale (which is 0 everywhere else) */}
-          <TooltipPrimitive.Arrow className="z-50 size-2.5 translate-y-[calc(-50%-2px)] rotate-45 rounded-[2px] bg-popover ring-1 ring-inset ring-foreground/10 data-[side=bottom]:top-1 data-[side=inline-end]:top-1/2! data-[side=inline-end]:-left-1 data-[side=inline-end]:-translate-y-1/2 data-[side=inline-start]:top-1/2! data-[side=inline-start]:-right-1 data-[side=inline-start]:-translate-y-1/2 data-[side=left]:top-1/2! data-[side=left]:-right-1 data-[side=left]:-translate-y-1/2 data-[side=right]:top-1/2! data-[side=right]:-left-1 data-[side=right]:-translate-y-1/2 data-[side=top]:-bottom-2.5" />
+          <TooltipPrimitive.Arrow className="z-50 size-2.5 translate-y-[calc(-50%-2px)] rotate-45 rounded-[2px] bg-popover ring-1 ring-inset ring-foreground/10 data-[side=bottom]:top-1 data-[side=inline-end]:top-1/2! data-[side=inline-end]:-inset-inline-start-1 data-[side=inline-end]:-translate-y-1/2 data-[side=inline-start]:top-1/2! data-[side=inline-start]:-inset-inline-end-1 data-[side=inline-start]:-translate-y-1/2 data-[side=left]:top-1/2! data-[side=left]:-right-1 data-[side=left]:-translate-y-1/2 data-[side=right]:top-1/2! data-[side=right]:-left-1 data-[side=right]:-translate-y-1/2 data-[side=top]:-bottom-2.5" />
         </TooltipPrimitive.Popup>
       </TooltipPrimitive.Positioner>
     </TooltipPrimitive.Portal>
@@ -103,7 +103,7 @@ function TooltipShortcut({
     <kbd
       data-slot="kbd"
       className={cn(
-        "ml-auto inline-flex items-center rounded-sm border border-border bg-muted px-1 py-0.5 text-[0.625rem] font-mono leading-none",
+        "ms-auto inline-flex items-center rounded-sm border border-border bg-muted px-1 py-0.5 text-10 font-mono leading-none",
         className
       )}
       {...props}

@@ -41,7 +41,7 @@ export function NumberInput({
           placeholder={placeholder}
           value={value}
           onChange={handleChange}
-          className={cn(onMax && "pr-14", className)}
+          className={cn(onMax && "pe-14", className)}
           disabled={disabled}
           {...props}
         />
@@ -50,7 +50,7 @@ export function NumberInput({
             type="button"
             size="sm"
             variant="outline"
-            className="absolute right-2 top-1/2 -translate-y-1/2 px-2 text-11"
+            className="absolute inset-inline-end-2 top-1/2 -translate-y-1/2 px-2 text-11"
             onClick={onMax}
             disabled={disabled}
           >

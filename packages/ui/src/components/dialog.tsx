@@ -2,9 +2,9 @@ import * as React from "react"
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
 
 import { Cancel01Icon } from "@hugeicons/core-free-icons"
-import { HugeiconsIcon } from "@hugeicons/react"
 import { cn } from "@workspace/ui/lib/utils"
 import { Button } from "@workspace/ui/components/button"
+import { Icon } from "./icon"
 
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />
@@ -19,7 +19,7 @@ function DialogPortal({ ...props }: DialogPrimitive.Portal.Props) {
 }
 
 function DialogClose({ ...props }: DialogPrimitive.Close.Props) {
-  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
+  return <DialogPrimitive.Close data-slot="dialog-close" className="touch-target" {...props} />
 }
 
 function DialogOverlay({
@@ -30,13 +30,17 @@ function DialogOverlay({
     <DialogPrimitive.Backdrop
       data-slot="dialog-overlay"
       className={cn(
-        "fixed inset-0 isolate z-50 bg-black/80 duration-100 supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
+        "fixed inset-0 isolate z-50 bg-black/80 duration-100 supports-backdrop-filter:backdrop-blur-xs",
+        "data-open:animate-in data-open:fade-in-0",
+        "data-closed:animate-out data-closed:fade-out-0",
+        "motion-reduce:duration-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
         className
       )}
       {...props}
     />
   )
 }
+
 
 function DialogContent({
   className,
@@ -53,18 +57,21 @@ function DialogContent({
         data-slot="dialog-content"
         className={cn(
           // Positioning & sizing
-          "fixed top-1/2 left-1/2 z-50 w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2",
+          "fixed top-1/2 inset-inline-start-1/2 z-50 w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2",
           // Mobile: cap height so content scrolls inside rather than overflowing the viewport
           "max-h-[calc(100dvh-2rem)] overflow-x-hidden overflow-y-auto",
           // Layout, surface, typography
           "flex flex-col gap-4 rounded-xl bg-popover p-4 text-xs/relaxed text-popover-foreground",
           "ring-1 ring-foreground/10 outline-none",
+          // Safe areas for mobile layouts
+          "max-sm:safe-top max-sm:safe-bottom max-sm:safe-left max-sm:safe-right",
           // Desktop max-width default
           "sm:max-w-sm",
           // Enter / exit animations
           "duration-100",
           "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95",
           "data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+          "motion-reduce:duration-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
           className
         )}
         {...props}
@@ -76,12 +83,12 @@ function DialogContent({
             render={
               <Button
                 variant="ghost"
-                className="absolute top-2 right-2"
+                className="absolute top-2 right-2 touch-target" // <-- AGREGADO AQUÍ
                 size="icon-sm"
               />
             }
           >
-            <HugeiconsIcon icon={Cancel01Icon} strokeWidth={2} />
+            <Icon icon={Cancel01Icon} size="md" />
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
         )}

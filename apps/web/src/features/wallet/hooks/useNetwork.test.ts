@@ -1,7 +1,7 @@
-import { describe, expect, it, beforeEach } from "vitest"
+import { beforeEach, describe, expect, it } from "vitest"
 import { renderHook } from "@testing-library/react"
-import { useNetwork, normalizeNetwork } from "./useNetwork"
 import { useWalletStore } from "../store/wallet-store"
+import { normalizeNetwork, useNetwork } from "./useNetwork"
 import { NETWORK } from "@/app/config/network"
 
 describe("normalizeNetwork", () => {

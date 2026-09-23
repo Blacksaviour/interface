@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react"
 import { getRouteApi } from "@tanstack/react-router"
-import { useTradeState } from "../hooks/useTradeState"
-import { useOrderEventPolling } from "../hooks/useOrderEventPolling"
-import { useBoundedChartHeight } from "../hooks/useBoundedChartHeight"
-import { useLayoutPreferencesStore } from "../store/layout-preferences-store"
 import { AppShell } from "@workspace/ui/components/app-shell"
 import { Button } from "@workspace/ui/components/button"
 import { ResizeHandle } from "@workspace/ui/components/resize-handle"
 import { cn } from "@workspace/ui/lib/utils"
+import { useTradeState } from "../hooks/useTradeState"
+import { useOrderEventPolling } from "../hooks/useOrderEventPolling"
+import { useBoundedChartHeight } from "../hooks/useBoundedChartHeight"
+import { useLayoutPreferencesStore } from "../store/layout-preferences-store"
 import { Navbar } from "../../../ui/Navbar"
 import { TVChart } from "./chart/TVChart"
 import { TradePanel } from "./trade-panel/TradePanel"
@@ -27,6 +27,10 @@ export function TradePage() {
 
   // Pre-fill the form from a shared deeplink (e.g. /trade?market=BTC&type=long).
   const search = tradeRoute.useSearch()
+  const navigate = tradeRoute.useNavigate()
+  const [activePanel, setActivePanel] = useState<"positions" | "orders" | "trades" | "claims">(
+    search.panel ?? "positions"
+  )
   const appliedDeeplink = useRef(false)
   useEffect(() => {
     if (appliedDeeplink.current) return
@@ -43,11 +47,25 @@ export function TradePage() {
     saveReferralCode(normalized)
   }, [search.ref])
 
+  useEffect(() => setActivePanel(search.panel ?? "positions"), [search.panel])
+
+  function handlePanelChange(panel: "positions" | "orders" | "trades" | "claims") {
+    setActivePanel(panel)
+    void navigate({ search: (previous) => ({ ...previous, panel }) })
+  }
+
   // ── Desktop workspace resizing (OB-038) ─────────────────────────────────
-  const leftColumnRef = useRef<HTMLDivElement>(null)
-  const { chartHeight, tradePanelWidth, setChartHeight, setTradePanelWidth, resetLayout } =
-    useLayoutPreferencesStore()
-  const boundedChartHeight = useBoundedChartHeight(leftColumnRef, chartHeight)
+  const chartRowRef = useRef<HTMLDivElement>(null)
+  const {
+    chartRowHeight,
+    bookWidth,
+    tradePanelWidth,
+    setChartRowHeight,
+    setBookWidth,
+    setTradePanelWidth,
+    resetLayout,
+  } = useLayoutPreferencesStore()
+  const boundedChartRowHeight = useBoundedChartHeight(chartRowRef, chartRowHeight)
 
   // ── Mobile chart/book/trade navigation (OB-037) ─────────────────────────
   const [mobileView, setMobileView] = useState<MobileTradeView>("chart")
@@ -60,28 +78,62 @@ export function TradePage() {
       className="overflow-hidden"
     >
       <div className="flex min-h-0 flex-1 flex-col lg:flex-row lg:px-6">
-        {/* ── Chart + Bottom Tabs column ─────────────────────────────── */}
-        <div ref={leftColumnRef} className="flex min-h-0 min-w-0 flex-1 flex-col">
+        {/* ── Left: Chart + Book row, Bottom Tabs below ──────────────── */}
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col">
           <div
-            id="mobile-trade-view-chart"
-            className={cn(
-              "min-h-0 flex-1 flex-col lg:flex-none lg:h-[var(--chart-height)]",
-              mobileViewClassName("chart", mobileView)
-            )}
-            style={{ ["--chart-height" as string]: `${boundedChartHeight}px` }}
+            ref={chartRowRef}
+            className="flex min-h-0 flex-1 flex-col lg:flex-none lg:h-[var(--chart-row-height)] lg:flex-row"
+            style={{ ["--chart-row-height" as string]: `${boundedChartRowHeight}px` }}
           >
-            <PanelErrorBoundary panel="chart">
-              <TVChart symbol={trade.toTokenAddress} onSelectToken={trade.setToTokenAddress} />
-            </PanelErrorBoundary>
+            {/* Chart */}
+            <div
+              id="mobile-trade-view-chart"
+              className={cn("min-h-0 min-w-0 flex-1 flex-col", mobileViewClassName("chart", mobileView))}
+            >
+              <PanelErrorBoundary panel="chart">
+                <TVChart symbol={trade.toTokenAddress} onSelectToken={trade.setToTokenAddress} />
+              </PanelErrorBoundary>
+            </div>
+
+            <ResizeHandle
+              orientation="vertical"
+              label="Resize market depth panel width"
+              value={bookWidth}
+              min={220}
+              max={420}
+              onChange={setBookWidth}
+              onReset={resetLayout}
+              className="hidden lg:block"
+            />
+
+            {/* Market depth / order book (reference data only — see PR scope note) */}
+            <aside
+              id="mobile-trade-view-book"
+              className={cn(
+                "min-h-40 w-full flex-col overflow-hidden border-t border-border lg:min-h-0 lg:w-[var(--book-width)] lg:border-t-0 lg:border-inline-start",
+                mobileViewClassName("book", mobileView)
+              )}
+              style={{ ["--book-width" as string]: `${bookWidth}px` }}
+            >
+              <PanelErrorBoundary panel="market depth">
+                <div className="flex items-center justify-between border-b border-border px-3 py-2">
+                  <h2 className="text-xs font-semibold uppercase tracking-wide">Market depth</h2>
+                  <span className="text-xs text-muted-foreground">Reference data</span>
+                </div>
+                <div className="flex flex-1 items-center justify-center p-4 text-center text-xs text-muted-foreground">
+                  Executable order-book depth is unavailable until a verified matching source is connected.
+                </div>
+              </PanelErrorBoundary>
+            </aside>
           </div>
 
           <ResizeHandle
             orientation="horizontal"
-            label="Resize chart height"
-            value={boundedChartHeight}
+            label="Resize chart and book row height"
+            value={boundedChartRowHeight}
             min={240}
             max={900}
-            onChange={setChartHeight}
+            onChange={setChartRowHeight}
             onReset={resetLayout}
             className="hidden lg:block"
           />
@@ -96,6 +148,8 @@ export function TradePage() {
           >
             <PanelErrorBoundary panel="positions and orders">
               <BottomTabs
+                value={activePanel}
+                onValueChange={handlePanelChange}
                 onSelectPosition={(pos) =>
                   trade.setActivePosition({
                     isLong: pos.isLong,
@@ -120,11 +174,11 @@ export function TradePage() {
           className="hidden lg:block"
         />
 
-        {/* ── Trade Panel ─────────────────────────────────────────────── */}
+        {/* ── Right: Trade Panel ─────────────────────────────────────── */}
         <div
           id="mobile-trade-view-trade"
           className={cn(
-            "w-full min-h-0 flex-col overflow-x-hidden overflow-y-auto border-t border-border lg:w-[var(--trade-panel-width)] lg:border-t-0 lg:shrink-0",
+            "w-full min-h-0 flex-col overflow-x-hidden overflow-y-auto border-t border-border lg:w-[var(--trade-panel-width)] lg:border-t-0 lg:border-inline-start lg:shrink-0",
             mobileViewClassName("trade", mobileView)
           )}
           style={{ ["--trade-panel-width" as string]: `${tradePanelWidth}px` }}

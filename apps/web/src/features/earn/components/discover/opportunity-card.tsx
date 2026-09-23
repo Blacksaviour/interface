@@ -1,6 +1,5 @@
 import { Button } from "@workspace/ui/components/button"
 import { Card, CardContent } from "@workspace/ui/components/card"
-import { Stat } from "@workspace/ui/components/stat"
 import { Text } from "@workspace/ui/components/text"
 import { cn } from "@workspace/ui/lib/utils"
 import { formatPct, formatUsd } from "@/shared/lib/format"
@@ -8,7 +7,7 @@ import { TokenIcon } from "@/shared/components/TokenIcon"
 
 export type OpportunityCardProps = {
   name: string
-  tokens: string[]
+  tokens: Array<string>
   apy: number
   tvlUsd: number
   isAvailable?: boolean

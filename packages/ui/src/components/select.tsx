@@ -1,11 +1,10 @@
 "use client"
 
-import * as React from "react"
 import { Select as SelectPrimitive } from "@base-ui/react/select"
 
 import { ChevronDownIcon, Tick02Icon } from "@hugeicons/core-free-icons"
-import { HugeiconsIcon } from "@hugeicons/react"
 import { cn } from "@workspace/ui/lib/utils"
+import { Icon } from "./icon"
 
 function Select<TValue, TMultiple extends boolean | undefined = false>({
   ...props
@@ -36,7 +35,7 @@ function SelectTrigger({
         data-slot="select-trigger-icon"
         className="text-muted-foreground"
       >
-        <HugeiconsIcon icon={ChevronDownIcon} strokeWidth={2} />
+        <Icon icon={ChevronDownIcon} size="sm" tone="muted" />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   )
@@ -90,16 +89,16 @@ function SelectItem({
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        "relative flex w-full cursor-default items-center gap-2 rounded-lg py-1.5 pr-2 pl-8 text-xs/relaxed outline-none select-none data-highlighted:bg-accent data-highlighted:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&>svg]:size-3.5 [&>svg]:shrink-0",
+        "relative flex w-full cursor-default items-center gap-2 rounded-lg py-1.5 ps-8 pe-2 text-xs/relaxed outline-none select-none data-highlighted:bg-accent data-highlighted:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&>svg]:size-3.5 [&>svg]:shrink-0",
         className
       )}
       {...props}
     >
       <SelectPrimitive.ItemIndicator
         data-slot="select-item-indicator"
-        className="absolute left-2 inline-flex items-center justify-center"
+        className="inset-inline-start-2 absolute inline-flex items-center justify-center"
       >
-        <HugeiconsIcon icon={Tick02Icon} strokeWidth={2} className="size-3.5" />
+        <Icon icon={Tick02Icon} size="sm" />
       </SelectPrimitive.ItemIndicator>
       <SelectPrimitive.ItemText data-slot="select-item-text">
         {children}
@@ -120,7 +119,7 @@ function SelectGroupLabel({
     <SelectPrimitive.GroupLabel
       data-slot="select-group-label"
       className={cn(
-        "px-2 py-1.5 text-[0.625rem] font-medium text-muted-foreground",
+        "px-2 py-1.5 text-10 font-medium text-muted-foreground",
         className
       )}
       {...props}

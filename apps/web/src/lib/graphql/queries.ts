@@ -6,22 +6,22 @@
  */
 
 import type {
-  Position,
-  Order,
-  Market,
   Deposit,
-  Withdrawal,
-  TraderReferral,
   FeeClaim,
+  Market,
+  Order,
   PoolBalanceSnapshot,
+  Position,
   PositionChange,
+  TraderReferral,
+  Withdrawal,
 } from "./types"
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helper to create typed document nodes
 // ─────────────────────────────────────────────────────────────────────────────
 
-type TypedDocumentNode<TResult, TVariables> = {
+export type TypedDocumentNode<TResult, TVariables> = {
   kind: "Document"
   loc?: { source: { body: string } }
   __apiType?: (variables: TVariables) => TResult
@@ -33,7 +33,7 @@ function gql<TResult, TVariables = Record<string, never>>(
   return {
     kind: "Document",
     loc: { source: { body: query } },
-  } as TypedDocumentNode<TResult, TVariables>
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

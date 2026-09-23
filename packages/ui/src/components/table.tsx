@@ -38,7 +38,7 @@ function TableHeadRow({ className, ...props }: React.ComponentProps<"tr">) {
   return (
     <tr
       data-slot="table-head-row"
-      className={cn("border-b border-border bg-muted/25 text-left", className)}
+      className={cn("border-b border-border bg-muted/25 text-start", className)}
       {...props}
     />
   )

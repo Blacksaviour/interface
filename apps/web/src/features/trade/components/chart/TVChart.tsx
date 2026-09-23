@@ -50,7 +50,7 @@ export function TVChart({ symbol, onSelectToken }: Props) {
         {symbol ? (
           <TVChartContainer symbol={symbol} period={period} />
         ) : (
-          <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
+          <div role="status" className="flex h-full items-center justify-center text-xs text-muted-foreground">
             Select a market
           </div>
         )}

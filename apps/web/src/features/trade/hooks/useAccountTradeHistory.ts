@@ -6,14 +6,14 @@
  */
 
 import { useQuery } from "@tanstack/react-query"
+import type { PositionChange } from "@/lib/graphql/types"
 import { executeGraphQLQuery } from "@/lib/graphql/client"
 import { GET_ACCOUNT_POSITION_CHANGES } from "@/lib/graphql/queries"
 import { indexerQueryKeys } from "@/lib/graphql/query-keys"
 import { INDEXER_CONFIG } from "@/app/config/indexer"
-import type { PositionChange } from "@/lib/graphql/types"
 
 export type UseAccountTradeHistoryResult = {
-  data: PositionChange[]
+  data: Array<PositionChange>
   isLoading: boolean
   error: Error | null
   isDisabled: boolean
@@ -52,7 +52,7 @@ export function useAccountTradeHistory(account: string | null): UseAccountTradeH
 
   return {
     data: data ?? [],
-    error: error as Error | null,
+    error: error,
     isLoading,
     isDisabled: false,
   }

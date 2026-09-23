@@ -46,7 +46,9 @@ describe("Text", () => {
 describe("Heading", () => {
   it("maps level to the matching heading tag", () => {
     render(<Heading level={1}>Page title</Heading>)
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Page title")
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+      "Page title"
+    )
   })
 
   it("defaults to level 2", () => {
@@ -92,13 +94,19 @@ describe("Stat", () => {
   })
 
   it("swaps the value for a skeleton while loading", () => {
-    const { container } = render(<Stat label="Total earned" value="$12.00" isLoading />)
+    const { container } = render(
+      <Stat label="Total earned" value="$12.00" isLoading />
+    )
     expect(screen.queryByText("$12.00")).not.toBeInTheDocument()
-    expect(container.querySelector("[data-slot='skeleton']")).toBeInTheDocument()
+    expect(
+      container.querySelector("[data-slot='skeleton']")
+    ).toBeInTheDocument()
   })
 
   it("has no accessibility violations", async () => {
-    const { container } = render(<Stat label="Balance" value="$0.00" role="positive" />)
+    const { container } = render(
+      <Stat label="Balance" value="$0.00" role="positive" />
+    )
     expect(await axe(container)).toHaveNoViolations()
   })
 })
@@ -158,7 +166,9 @@ describe("Spinner", () => {
 
   it("announces itself when given a label", () => {
     render(<Spinner label="Loading prices" />)
-    expect(screen.getByRole("status", { name: "Loading prices" })).toBeInTheDocument()
+    expect(
+      screen.getByRole("status", { name: "Loading prices" })
+    ).toBeInTheDocument()
   })
 })
 
@@ -194,7 +204,9 @@ describe("Alert", () => {
 
 describe("state primitives", () => {
   it("LoadingState announces itself and renders the requested rows", () => {
-    const { container } = render(<LoadingState rows={3} label="Loading assets" />)
+    const { container } = render(
+      <LoadingState rows={3} label="Loading assets" />
+    )
     expect(screen.getByRole("status")).toBeInTheDocument()
     expect(screen.getByText("Loading assets")).toBeInTheDocument()
     expect(container.querySelectorAll("[data-slot='skeleton']")).toHaveLength(3)
@@ -210,7 +222,9 @@ describe("state primitives", () => {
     )
     expect(screen.getByText("No deposits")).toBeInTheDocument()
     expect(screen.getByText("Start earning by depositing")).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Browse pools" })).toBeInTheDocument()
+    expect(
+      screen.getByRole("button", { name: "Browse pools" })
+    ).toBeInTheDocument()
   })
 
   it("ErrorState exposes an alert and an optional retry", async () => {
@@ -242,13 +256,15 @@ describe("Card", () => {
         <CardContent>Body</CardContent>
       </Card>
     )
-    expect(screen.getByRole("heading", { name: "My assets" })).toBeInTheDocument()
+    expect(
+      screen.getByRole("heading", { name: "My assets" })
+    ).toBeInTheDocument()
     expect(screen.getByText("Body")).toBeInTheDocument()
   })
 
   it("has no accessibility violations", async () => {
     const { container } = render(
-      <Card variant="muted" padding="md">
+      <Card variant="subtle" padding="default">
         <Text>Card body</Text>
       </Card>
     )
@@ -286,7 +302,9 @@ describe("Table", () => {
 
   it("renders column headers and cells", () => {
     render(<ExampleTable />)
-    expect(screen.getByRole("columnheader", { name: "Epoch" })).toBeInTheDocument()
+    expect(
+      screen.getByRole("columnheader", { name: "Epoch" })
+    ).toBeInTheDocument()
     expect(screen.getByRole("cell", { name: "W-12" })).toBeInTheDocument()
   })
 
@@ -299,9 +317,9 @@ describe("Table", () => {
 
   it("scrolls horizontally instead of widening the page", () => {
     const { container } = render(<ExampleTable />)
-    expect(container.querySelector('[data-slot="table-container"]')).toHaveClass(
-      "overflow-x-auto"
-    )
+    expect(
+      container.querySelector('[data-slot="table-container"]')
+    ).toHaveClass("overflow-x-auto")
   })
 
   it("has no accessibility violations", async () => {

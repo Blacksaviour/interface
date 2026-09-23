@@ -67,7 +67,7 @@ export function ConnectButton({
         aria-label="Connecting wallet"
       >
         <span
-          className="mr-2 inline-block size-3 animate-spin rounded-full border-2 border-current border-t-transparent"
+          className="me-2 inline-block size-3 animate-spin rounded-full border-2 border-current border-t-transparent"
           aria-hidden="true"
         />
         <span role="status">Connecting</span>
@@ -90,7 +90,7 @@ export function ConnectButton({
           aria-expanded={open}
           aria-controls={open ? dropdownId : undefined}
         >
-          <span className="mr-1.5 inline-block size-2 rounded-full bg-green-500" />
+          <span className="me-1.5 inline-block size-2 rounded-full bg-green-500" />
           <span className={compactMobile ? "hidden sm:inline" : ""}>
             {shortenAddress(address)}
           </span>
@@ -147,7 +147,7 @@ export function ConnectButton({
                   items[currentIndex]?.click()
                 }
               }}
-              className="fixed inset-x-0 bottom-0 z-50 rounded-t-2xl border border-border bg-background py-2 shadow-xl sm:absolute sm:top-full sm:right-0 sm:mt-1 sm:w-44 sm:rounded-lg"
+              className="fixed inset-x-0 bottom-0 z-50 rounded-t-2xl border border-border bg-background py-2 shadow-xl sm:absolute sm:top-full sm:inset-inline-end-0 sm:mt-1 sm:w-44 sm:rounded-lg"
             >
               <div className="border-b border-border px-3 py-2">
                 <p className="truncate text-xs text-muted-foreground">
@@ -164,7 +164,7 @@ export function ConnectButton({
                   void navigator.clipboard.writeText(address)
                   setOpen(false)
                 }}
-                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+                className="flex w-full items-center gap-2 px-3 py-2 text-start text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
               >
                 Copy address
               </button>
@@ -178,7 +178,7 @@ export function ConnectButton({
                   disconnect()
                   setOpen(false)
                 }}
-                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+                className="flex w-full items-center gap-2 px-3 py-2 text-start text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
               >
                 Disconnect
               </button>

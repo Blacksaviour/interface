@@ -386,7 +386,7 @@ describe("useWalletStore", () => {
 
     it("should maintain network regardless of wallet changes", () => {
       const { getState } = useWalletStore
-      const { setConnected, setDisconnected} = getState()
+      const { setConnected } = getState()
 
       setConnected("GCZXVVCZULC5NZ2V23MZWCABDGVH42DXSBVVMVX34OXQBAWIB7CFZZJ", "freighter")
       expect(getState().network).toBe("testnet")

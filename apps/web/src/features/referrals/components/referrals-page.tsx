@@ -1,5 +1,10 @@
 import { useState } from "react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@workspace/ui/components/tabs"
 import { AppShell } from "@workspace/ui/components/app-shell"
 import { PageHeader } from "@workspace/ui/components/page-header"
 import { useQueryClient } from "@tanstack/react-query"
@@ -57,48 +62,53 @@ export function ReferralsPage() {
             onValueChange={(v) => setTab(v as ReferralsTab)}
             className="gap-6"
           >
-          <TabsList className="h-9 w-full overflow-x-auto sm:w-fit">
-            <TabsTrigger value="traders">Traders</TabsTrigger>
-            <TabsTrigger value="affiliates">Affiliates</TabsTrigger>
-            <TabsTrigger
-              value="distributions"
-              className="gap-1.5"
-              disabled={!hasAffiliateCode}
-            >
-              {!hasAffiliateCode && <LockIcon />}
-              Distributions
-            </TabsTrigger>
-          </TabsList>
+            <TabsList className="h-9 w-full overflow-x-auto sm:w-fit">
+              <TabsTrigger value="traders">Traders</TabsTrigger>
+              <TabsTrigger value="affiliates">Affiliates</TabsTrigger>
+              <TabsTrigger
+                value="distributions"
+                className="gap-1.5"
+                disabled={!hasAffiliateCode}
+              >
+                {!hasAffiliateCode && <LockIcon />}
+                Distributions
+              </TabsTrigger>
+            </TabsList>
 
-          {/* Stacks on mobile; 2-column (content + sticky sidebar) from lg up */}
-          <div className="flex flex-col gap-5 lg:flex-row">
-            <div className="min-w-0 flex-1">
-              <TabsContent value="traders">
-                <TradersTab
-                  onCodeApplied={() => {
-                    void queryClient.invalidateQueries({ queryKey: ["referrals", "trader-stats"] })
-                    void queryClient.invalidateQueries({ queryKey: queryKeys.referrals.tier(null) })
-                  }}
-                />
-              </TabsContent>
-              <TabsContent value="affiliates">
-                <AffiliatesTab />
-              </TabsContent>
-              <TabsContent value="distributions">
-                <DistributionsTab />
-              </TabsContent>
+            {/* Stacks on mobile; 2-column (content + sticky sidebar) from lg up */}
+            <div className="flex flex-col gap-5 lg:flex-row">
+              <div className="min-w-0 flex-1">
+                <TabsContent value="traders">
+                  <TradersTab
+                    onCodeApplied={() => {
+                      void queryClient.invalidateQueries({
+                        queryKey: ["referrals", "trader-stats"],
+                      })
+                      void queryClient.invalidateQueries({
+                        queryKey: queryKeys.referrals.tier(null),
+                      })
+                    }}
+                  />
+                </TabsContent>
+                <TabsContent value="affiliates">
+                  <AffiliatesTab />
+                </TabsContent>
+                <TabsContent value="distributions">
+                  <DistributionsTab />
+                </TabsContent>
+              </div>
+
+              <ReferralsSidebar
+                tab={tab}
+                traderCode={traderCode}
+                affiliateCode={affiliateCode}
+                traderDiscountPct={traderStats?.discountPct ?? 5}
+                affiliateTier={affiliateTier ?? 1}
+              />
             </div>
-
-            <ReferralsSidebar
-              tab={tab}
-              traderCode={traderCode}
-              affiliateCode={affiliateCode}
-              traderDiscountPct={traderStats?.discountPct ?? 5}
-              affiliateTier={affiliateTier ?? 1}
-            />
-          </div>
-        </Tabs>
-      </PageHeader>
+          </Tabs>
+        }
+      />
     </AppShell>
   )
 }

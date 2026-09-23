@@ -31,7 +31,7 @@ export type PaymentRecord = {
 /** Result of a single paginated fetch. */
 export type PaymentPage = {
   /** Payment records for this page. */
-  records: PaymentRecord[]
+  records: Array<PaymentRecord>
   /**
    * Opaque cursor to pass on the next call to get the following page.
    * `null` when there are no more pages.
@@ -93,10 +93,10 @@ export async function fetchPaymentHistory(
 
   const json = await res.json() as {
     _links?: { next?: { href?: string } | null }
-    _embedded?: { records?: PaymentRecord[] }
+    _embedded?: { records?: Array<PaymentRecord> }
   }
 
-  const records: PaymentRecord[] = json._embedded?.records ?? []
+  const records: Array<PaymentRecord> = json._embedded?.records ?? []
   const nextHref = json._links?.next?.href ?? null
   // Only surface a cursor when the page is full — a partial page means we're done.
   const nextCursor = records.length < limit ? null : cursorFromNextHref(nextHref)
@@ -114,8 +114,8 @@ export async function fetchPaymentHistory(
 export async function fetchAllPaymentHistory(
   accountId: string,
   options: Omit<FetchPaymentHistoryOptions, "cursor"> = {},
-): Promise<PaymentRecord[]> {
-  const all: PaymentRecord[] = []
+): Promise<Array<PaymentRecord>> {
+  const all: Array<PaymentRecord> = []
   let cursor: string | undefined
 
   for (;;) {

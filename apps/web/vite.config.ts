@@ -9,7 +9,7 @@ function bundleSizeGuard(limitKb: number) {
   return {
     name: "bundle-size-guard",
     enforce: "post" as const,
-    generateBundle(options: any, bundle: any) {
+    generateBundle(_options: any, bundle: any) {
       for (const [fileName, chunk] of Object.entries(bundle)) {
         if ((chunk as any).type === "chunk") {
           const sizeKb = (chunk as any).code.length / 1024;

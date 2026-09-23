@@ -27,7 +27,7 @@ function getGlvClient(): GlvRouterClient {
   glvClient ??= new GlvRouterClient({
     contractId: CONTRACTS.glvRouter,
     networkPassphrase: NETWORK.networkPassphrase,
-    rpcUrl: import.meta.env.VITE_RPC_URL,
+    rpcUrl: NETWORK.rpcUrl,
   })
 
   return glvClient

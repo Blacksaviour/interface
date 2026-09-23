@@ -29,12 +29,6 @@ function fmtDate(iso: string) {
   }).format(new Date(iso))
 }
 
-const DISCOUNT_TIER_VOLUME: Record<string, string> = {
-  Bronze: "Any volume",
-  Silver: "$2.5K+ / mo",
-  Gold: "$25K+ / mo",
-}
-
 type JoinCodeFormProps = {
   onSuccess: () => void
 }
@@ -239,7 +233,7 @@ function DistributionsHistory() {
       <div className="overflow-x-auto">
         <table className="w-full text-xs">
           <thead>
-            <tr className="border-b border-border bg-muted/25 text-left">
+            <tr className="border-b border-border bg-muted/25 text-start">
               <th className="px-5 py-3 font-medium text-muted-foreground">Epoch</th>
               <th className="px-5 py-3 font-medium text-muted-foreground">Date</th>
               <th className="px-5 py-3 text-right font-medium text-muted-foreground">Amount</th>
