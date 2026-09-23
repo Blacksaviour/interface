@@ -37,7 +37,7 @@ export function HeroSection() {
 
       <div className="relative mx-auto flex min-h-160 w-full max-w-300 flex-col justify-end px-4 pt-20 pb-15 sm:min-h-215 sm:px-10 sm:pt-24 sm:pb-20">
         <h1 className="text-heading-1 text-white">
-          Trade <AnimatedTitle /> from your wallet
+          Trade <AnimatedTitle /> on verified order book
         </h1>
 
         {/* The CTA + subheadline + 3-stat group only fit on one line once
@@ -52,8 +52,8 @@ export function HeroSection() {
             </Link>
 
             <p className="text-subheadline sm:w-56.5">
-              Decentralised permissionless on-chain exchange with deep liquidity and low costs,
-              built on Stellar Soroban.
+              Stellar-native order book trading with verified settlement, sub-5-second finality,
+              and market-making pools.
             </p>
           </div>
 

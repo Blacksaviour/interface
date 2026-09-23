@@ -13,12 +13,20 @@
     <lastmod>2026-09-04</lastmod>
   </url>
   <url>
+    <loc>https://docs.so4.market/concepts/margin-and-leverage</loc>
+    <lastmod>2026-09-02</lastmod>
+  </url>
+  <url>
     <loc>https://docs.so4.market/concepts/oracles</loc>
     <lastmod>2026-08-31</lastmod>
   </url>
   <url>
     <loc>https://docs.so4.market/concepts/order-types</loc>
     <lastmod>2026-08-31</lastmod>
+  </url>
+  <url>
+    <loc>https://docs.so4.market/concepts/perpetuals</loc>
+    <lastmod>2026-09-02</lastmod>
   </url>
   <url>
     <loc>https://docs.so4.market/concepts/risk</loc>
@@ -66,7 +74,11 @@
   </url>
   <url>
     <loc>https://docs.so4.market/get-started/quickstart</loc>
-    <lastmod>2026-08-30</lastmod>
+    <lastmod>2026-09-02</lastmod>
+  </url>
+  <url>
+    <loc>https://docs.so4.market/get-started/wallets</loc>
+    <lastmod>2026-09-02</lastmod>
   </url>
   <url>
     <loc>https://docs.so4.market/guides/earn</loc>
