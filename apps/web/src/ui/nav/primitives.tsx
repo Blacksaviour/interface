@@ -139,7 +139,7 @@ export function HamburgerButton({
 
 // ── Mobile menu hook ──
 
-export function useMobileMenu() {
+export function useMobileMenu(onEscape?: () => void) {
   const [open, setOpen] = useState(false)
 
   const toggle = useCallback(() => setOpen((v) => !v), [])
@@ -149,12 +149,13 @@ export function useMobileMenu() {
     if (!open) return
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
+        onEscape?.()
         setOpen(false)
       }
     }
     document.addEventListener("keydown", handler)
     return () => document.removeEventListener("keydown", handler)
-  }, [open])
+  }, [onEscape, open])
 
   return { open, toggle, close }
 }
