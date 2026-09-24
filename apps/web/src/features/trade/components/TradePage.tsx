@@ -77,12 +77,13 @@ export function TradePage() {
       banner={<CircuitBreakerBanner symbol={trade.toTokenAddress} />}
       className="overflow-hidden"
     >
-      <div className="flex min-h-0 flex-1 flex-col lg:flex-row lg:px-6">
+      {/* Main layout: stacked mobile, stacked-with-tabs tablet, side-by-side desktop */}
+      <div className="flex min-h-0 flex-1 flex-col md:flex-row md:px-4 lg:flex-row lg:px-6">
         {/* ── Left: Chart + Book row, Bottom Tabs below ──────────────── */}
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">
           <div
             ref={chartRowRef}
-            className="flex min-h-0 flex-1 flex-col lg:flex-none lg:h-[var(--chart-row-height)] lg:flex-row"
+            className="flex min-h-0 flex-1 flex-col md:flex-none md:h-[var(--chart-row-height)] md:flex-row lg:flex-none lg:h-[var(--chart-row-height)] lg:flex-row"
             style={{ ["--chart-row-height" as string]: `${boundedChartRowHeight}px` }}
           >
             {/* Chart */}
@@ -103,14 +104,14 @@ export function TradePage() {
               max={420}
               onChange={setBookWidth}
               onReset={resetLayout}
-              className="hidden lg:block"
+              className="hidden md:block"
             />
 
             {/* Market depth / order book (reference data only — see PR scope note) */}
             <aside
               id="mobile-trade-view-book"
               className={cn(
-                "min-h-40 w-full flex-col overflow-hidden border-t border-border lg:min-h-0 lg:w-[var(--book-width)] lg:border-t-0 lg:border-inline-start",
+                "min-h-40 w-full flex-col overflow-hidden border-t border-border md:min-h-0 md:w-[var(--book-width)] md:border-t-0 md:border-inline-start lg:min-h-0 lg:w-[var(--book-width)] lg:border-t-0 lg:border-inline-start",
                 mobileViewClassName("book", mobileView)
               )}
               style={{ ["--book-width" as string]: `${bookWidth}px` }}
@@ -135,14 +136,14 @@ export function TradePage() {
             max={900}
             onChange={setChartRowHeight}
             onReset={resetLayout}
-            className="hidden lg:block"
+            className="hidden md:block"
           />
 
-          {/* Bottom tabs: Positions / Orders / Trades / Claims */}
+          {/* Bottom tabs/panels: Positions / Orders / Trades / Claims */}
           <div
             id="mobile-trade-view-positions"
             className={cn(
-              "min-h-0 flex-1 flex-col overflow-auto border-t border-border lg:border-t-0",
+              "min-h-0 flex-1 flex-col overflow-auto border-t border-border md:border-t-0 md:hidden lg:flex lg:border-t-0",
               mobileViewClassName("positions", mobileView)
             )}
           >
@@ -171,14 +172,14 @@ export function TradePage() {
           max={480}
           onChange={setTradePanelWidth}
           onReset={resetLayout}
-          className="hidden lg:block"
+          className="hidden md:block"
         />
 
-        {/* ── Right: Trade Panel ─────────────────────────────────────── */}
+        {/* ── Right: Trade Panel (tablet: overlay, desktop: side panel) ─── */}
         <div
           id="mobile-trade-view-trade"
           className={cn(
-            "w-full min-h-0 flex-col overflow-x-hidden overflow-y-auto border-t border-border lg:w-[var(--trade-panel-width)] lg:border-t-0 lg:border-inline-start lg:shrink-0",
+            "w-full min-h-0 flex-col overflow-x-hidden overflow-y-auto border-t border-border md:w-[var(--trade-panel-width)] md:border-t-0 md:border-inline-start md:shrink-0 lg:w-[var(--trade-panel-width)] lg:border-t-0 lg:border-inline-start lg:shrink-0",
             mobileViewClassName("trade", mobileView)
           )}
           style={{ ["--trade-panel-width" as string]: `${tradePanelWidth}px` }}
@@ -189,13 +190,14 @@ export function TradePage() {
         </div>
       </div>
 
-      <div className="flex items-center justify-end gap-2 border-t border-border px-4 py-1.5 max-lg:hidden">
+      <div className="flex items-center justify-end gap-2 border-t border-border px-4 py-1.5 max-md:hidden">
         <Button variant="ghost" size="sm" onClick={resetLayout}>
           Reset layout
         </Button>
       </div>
 
-      <MobileTradeNav active={mobileView} onChange={setMobileView} className="lg:hidden" />
+      {/* Show mobile/tablet nav only on md and below; tablet shows chart+book + trade/positions tabs */}
+      <MobileTradeNav active={mobileView} onChange={setMobileView} className="md:hidden" />
     </AppShell>
   )
 }

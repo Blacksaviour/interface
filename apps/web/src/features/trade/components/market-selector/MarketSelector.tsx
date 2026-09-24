@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react"
 
 export type MarketItem = {
-  id: string   // indexTokenAddress
-  name: string // e.g. "BTC/USD"
+  id: string      // indexTokenAddress
+  name: string    // e.g. "BTC/USD"
+  disabled?: boolean
 }
 
 const FAVORITES_KEY = "so4-market-favorites-v1"
@@ -18,28 +19,32 @@ function loadFavorites(network: string): Array<string> {
 }
 
 type Props = {
-  markets: Array<MarketItem>
+  markets?: Array<MarketItem>
   activeMarketId?: string
   onSelect: (marketId: string) => void
   network?: string
 }
 
-export function MarketSelector({ markets, activeMarketId, onSelect, network = "stellar-mainnet" }: Props) {
+export function MarketSelector({ markets: marketsProp, activeMarketId, onSelect, network = "stellar-mainnet" }: Props) {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState("")
   const [favorites, setFavorites] = useState<Array<string>>(() => loadFavorites(network))
   const containerRef = useRef<HTMLDivElement>(null)
 
+  // Use provided markets or an empty array as fallback
+  const markets = marketsProp ?? []
+
   const activeMarket = markets.find((m) => m.id === activeMarketId)
   const availableIds = new Set(markets.map((market) => market.id))
+  const enabledMarkets = markets.filter((m) => !m.disabled)
   const validFavorites = favorites.filter((id) => availableIds.has(id))
 
   useEffect(() => setFavorites(loadFavorites(network)), [network])
 
   const filtered =
     query.trim() === ""
-      ? [...markets].sort((a, b) => Number(validFavorites.includes(b.id)) - Number(validFavorites.includes(a.id)))
-      : markets.filter((m) => m.name.toLowerCase().includes(query.toLowerCase()))
+      ? [...enabledMarkets].sort((a, b) => Number(validFavorites.includes(b.id)) - Number(validFavorites.includes(a.id)))
+      : enabledMarkets.filter((m) => m.name.toLowerCase().includes(query.toLowerCase()) || m.id.toLowerCase().includes(query.toLowerCase()))
 
   function toggleFavorite(id: string) {
     const next = favorites.includes(id) ? favorites.filter((value) => value !== id) : [...favorites, id]
@@ -114,15 +119,16 @@ export function MarketSelector({ markets, activeMarketId, onSelect, network = "s
               </p>
             ) : (
               filtered.map((market) => (
-                <div key={market.id} className="flex items-center rounded hover:bg-accent">
+                <div key={market.id} className={`flex items-center rounded ${market.disabled ? "opacity-50" : "hover:bg-accent"}`}>
                   <button
                     type="button"
+                    disabled={market.disabled}
                     onClick={() => {
                       onSelect(market.id)
                       setOpen(false)
                       setQuery("")
                     }}
-                    className={`min-w-0 flex-1 px-3 py-2 text-start text-sm ${market.id === activeMarketId ? "font-medium" : ""}`}
+                    className={`min-w-0 flex-1 px-3 py-2 text-start text-sm disabled:cursor-not-allowed ${market.id === activeMarketId ? "font-medium" : ""}`}
                   >
                     {market.name}
                   </button>

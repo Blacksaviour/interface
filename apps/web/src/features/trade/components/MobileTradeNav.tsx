@@ -65,9 +65,15 @@ export function MobileTradeNav({ active, onChange, className }: MobileTradeNavPr
  * scroll position, and focus intact when the user switches tabs and comes
  * back, and avoids re-running any panel mount animation on every switch.
  *
- * Below `lg` only the active view is displayed; at `lg` and up all three
- * regions are shown side by side regardless of the mobile tab selection.
+ * Mobile (< md): single active view only
+ * Tablet (md - lg): chart + book visible, trade/positions in tabs
+ * Desktop (>= lg): all regions shown side by side
  */
 export function mobileViewClassName(view: MobileTradeView, active: MobileTradeView): string {
-  return view === active ? "flex lg:flex" : "hidden lg:flex"
+  // Show chart and book at all times on tablet/desktop, use tabs for others
+  if (view === "chart" || view === "book") {
+    return "flex md:flex"
+  }
+  // Trade and positions tabs: active on mobile, otherwise hidden until lg
+  return view === active ? "flex md:hidden lg:flex" : "hidden md:hidden lg:flex"
 }
