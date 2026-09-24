@@ -111,6 +111,7 @@ export function TradePage() {
             {/* Market depth / order book panel — tabs: Order Book + Trades tape */}
             <aside
               id="mobile-trade-view-book"
+              aria-label="Order book depth"
               className={cn(
                 "min-h-40 w-full flex-col overflow-hidden border-t border-border md:min-h-0 md:w-[var(--book-width)] md:border-t-0 md:border-inline-start lg:min-h-0 lg:w-[var(--book-width)] lg:border-t-0 lg:border-inline-start",
                 mobileViewClassName("book", mobileView)
