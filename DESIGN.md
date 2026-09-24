@@ -116,6 +116,13 @@ then review the diffs in `e2e/design-system-visual.spec.ts-snapshots/` in your P
 
 ## The component gallery (`/gallery`)
 
+Trading surfaces use `--trading-panel-padding` and `--trading-row-height` for
+compact panels. Depth fills use `--trading-depth-buy` and
+`--trading-depth-sell`, with side labels and numeric alignment so color is not
+the only state cue. `--trading-divider` is the shared low-emphasis divider
+role. These roles have semantic light/dark values and should be consumed via
+CSS variables or named utilities rather than raw colors or arbitrary sizes.
+
 [`apps/web/src/features/gallery/components/gallery-page.tsx`](./apps/web/src/features/gallery/components/gallery-page.tsx) renders every `packages/ui` primitive across all its variants on one page. It's not linked from the app's main navigation (it's an internal dev/design tool, not a trader-facing page) — visit `http://localhost:3000/gallery` directly in a local dev server. It exists to:
 
 - give reviewers one place to see every variant of a component at once instead of hunting through feature pages for one that happens to use the state you changed

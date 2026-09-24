@@ -176,6 +176,13 @@
     --height-default: 1.75rem;       /* 28px  — h-7 equivalent */
     --height-comfortable: 2.5rem;    /* 40px  — h-10 equivalent */
 
+    /* Trading density/state roles (OB-006). */
+    --trading-panel-padding: 0.75rem;
+    --trading-row-height: 1.75rem;
+    --trading-divider: var(--border);
+    --trading-depth-buy: var(--long-subtle);
+    --trading-depth-sell: var(--short-subtle);
+
     /*
      * Page gutters — responsive horizontal padding at layout edges.
      *
