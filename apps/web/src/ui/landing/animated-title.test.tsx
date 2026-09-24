@@ -68,4 +68,57 @@ describe("AnimatedTitle", () => {
       expect.any(Function)
     )
   })
+
+  it("pauses rotation when page becomes hidden", () => {
+    vi.useFakeTimers()
+    motionPreference()
+    const { container } = render(<AnimatedTitle />)
+
+    // Simulate page becoming hidden
+    Object.defineProperty(document, "hidden", {
+      configurable: true,
+      get: () => true,
+    })
+    act(() => {
+      const event = new Event("visibilitychange")
+      document.dispatchEvent(event)
+    })
+
+    const initialText = container.querySelector("span.text-gmx-blue-400")?.textContent
+
+    // Advance time - rotation should not happen while hidden
+    act(() => vi.advanceTimersByTime(5000))
+
+    expect(container.querySelector("span.text-gmx-blue-400")?.textContent).toBe(initialText)
+
+    // Restore document.hidden
+    Object.defineProperty(document, "hidden", {
+      configurable: true,
+      get: () => false,
+    })
+  })
+
+  it("applies min-w-max to prevent width shifts during rotation", () => {
+    vi.useFakeTimers()
+    motionPreference()
+    const { container } = render(<AnimatedTitle />)
+
+    const titleSpan = container.querySelector("span.text-gmx-blue-400")
+    expect(titleSpan?.className).toContain("min-w-max")
+  })
+
+  it("cleans up visibility change listener on unmount", () => {
+    vi.useFakeTimers()
+    motionPreference()
+    const removeEventListenerSpy = vi.spyOn(document, "removeEventListener")
+
+    const { unmount } = render(<AnimatedTitle />)
+    unmount()
+
+    expect(removeEventListenerSpy).toHaveBeenCalledWith(
+      "visibilitychange",
+      expect.any(Function)
+    )
+    removeEventListenerSpy.mockRestore()
+  })
 })

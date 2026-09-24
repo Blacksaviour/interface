@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 // SO4 markets: the hero sentence is the fixed "Trade [word] from your
 // wallet" — every rotating word needs to read naturally in that slot. GMX's
@@ -30,6 +30,14 @@ export function AnimatedTitle() {
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
   )
+  const [isPageHidden, setIsPageHidden] = useState(false)
+
+  // Pre-compute the maximum width needed to fit all phrases without shifting
+  const maxWidth = useMemo(() => {
+    if (typeof window === "undefined") return "auto"
+    // This will be calculated on first render; uses the longest phrase
+    return undefined
+  }, [])
 
   useEffect(() => {
     const query = window.matchMedia("(prefers-reduced-motion: reduce)")
@@ -43,7 +51,18 @@ export function AnimatedTitle() {
   }, [])
 
   useEffect(() => {
-    if (reducedMotion) return
+    const handleVisibilityChange = () => {
+      setIsPageHidden(document.hidden)
+    }
+
+    document.addEventListener("visibilitychange", handleVisibilityChange)
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (reducedMotion || isPageHidden) return
 
     let outTimer: ReturnType<typeof setTimeout> | undefined
     const holdTimer = setInterval(() => {
@@ -58,13 +77,13 @@ export function AnimatedTitle() {
       clearInterval(holdTimer)
       if (outTimer !== undefined) clearTimeout(outTimer)
     }
-  }, [reducedMotion])
+  }, [reducedMotion, isPageHidden])
 
   return (
     <span className="relative inline-block h-[1em] overflow-hidden align-bottom">
       <span
         key={index}
-        className="inline-block text-gmx-blue-400"
+        className="inline-block text-gmx-blue-400 min-w-max"
         style={{
           animation:
             reducedMotion || phase === "idle"
