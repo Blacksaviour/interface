@@ -6,6 +6,7 @@ import { Button } from "@workspace/ui/components/button"
 import { Callout } from "@workspace/ui/components/callout"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@workspace/ui/components/card"
 import { Input } from "@workspace/ui/components/input"
+import { InterruptiblePresence } from "@workspace/ui/components/interruptible-presence"
 import { KeyboardShortcut } from "@workspace/ui/components/keyboard-shortcut"
 import { LiveRegion } from "@workspace/ui/components/live-region"
 import { PageHeader } from "@workspace/ui/components/page-header"
@@ -92,6 +93,7 @@ export function GalleryPage() {
   const { direction, setDirection } = useDirection()
   const [sliderValue, setSliderValue] = useState<Array<number>>([40])
   const [announceCount, setAnnounceCount] = useState(0)
+  const [presenceOpen, setPresenceOpen] = useState(true)
 
   return (
     <main className="mx-auto max-w-4xl space-y-10 p-6">
@@ -152,6 +154,21 @@ export function GalleryPage() {
               {variant}
             </Badge>
           ))}
+        </div>
+      </Section>
+
+      <Section title="Trading density and interruptible presence">
+        <div className="space-y-3">
+          <div className="grid grid-cols-2 gap-1 rounded-md border border-border p-2 text-11-5 font-mono">
+            <span className="bg-long-subtle p-2 text-long">BUY 1.25</span>
+            <span className="bg-short-subtle p-2 text-short">SELL 1.25</span>
+          </div>
+          <button type="button" className="rounded-sm border border-border px-3 py-1.5 text-13" onClick={() => setPresenceOpen(value => !value)}>
+            {presenceOpen ? "Close" : "Open"} panel
+          </button>
+          <InterruptiblePresence present={presenceOpen} className="rounded-md border border-border bg-surface-raised p-3 text-sm">
+            Reversible panel content remains mounted during exit and cannot receive focus.
+          </InterruptiblePresence>
         </div>
       </Section>
 
