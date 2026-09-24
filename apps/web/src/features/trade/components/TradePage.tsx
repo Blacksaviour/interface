@@ -15,7 +15,7 @@ import { BottomTabs } from "./positions/BottomTabs"
 import { CircuitBreakerBanner } from "./CircuitBreakerBanner"
 import { PanelErrorBoundary } from "./PanelErrorBoundary"
 import { MobileTradeNav, mobileViewClassName, type MobileTradeView } from "./MobileTradeNav"
-import { DepthLadder } from "./orderbook/DepthLadder"
+import { OrderBookPanel } from "./orderbook/OrderBookPanel"
 import { saveReferralCode } from "@/lib/contracts"
 
 const tradeRoute = getRouteApi("/trade")
@@ -108,7 +108,7 @@ export function TradePage() {
               className="hidden md:block"
             />
 
-            {/* Bid/ask depth ladder */}
+            {/* Market depth / order book panel — tabs: Order Book + Trades tape */}
             <aside
               id="mobile-trade-view-book"
               aria-label="Order book depth"
@@ -118,11 +118,8 @@ export function TradePage() {
               )}
               style={{ ["--book-width" as string]: `${bookWidth}px` }}
             >
-              <PanelErrorBoundary panel="order book depth">
-                <DepthLadder
-                  symbol={trade.toTokenAddress}
-                  compact={bookWidth < 280}
-                />
+              <PanelErrorBoundary panel="market depth">
+                <OrderBookPanel symbol={trade.toTokenAddress} />
               </PanelErrorBoundary>
             </aside>
           </div>
