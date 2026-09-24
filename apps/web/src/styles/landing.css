@@ -24,14 +24,7 @@
 @media (prefers-reduced-motion: reduce) {
   .landing-mobile-menu {
     transform: none;
-    transition:
-      opacity 120ms ease,
-      visibility 0s 120ms;
-  }
-  .landing-mobile-menu[data-open="true"] {
-    transition:
-      opacity 120ms ease,
-      visibility 0s;
+    transition: none;
   }
 }
 

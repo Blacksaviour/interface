@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { Link } from "@tanstack/react-router"
 import { HamburgerButton, SiteLogo, useMobileMenu } from "../nav/primitives"
 
@@ -34,11 +34,15 @@ function OpenAppButton({ className }: { className?: string }) {
 }
 
 export function HeaderMenu() {
-  const { open, toggle, close } = useMobileMenu()
   const panelRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const desktopNavRef = useRef<HTMLUListElement>(null)
   const [instant, setInstant] = useState(false)
+  const restoreTrigger = useCallback(() => {
+    setInstant(true)
+    triggerRef.current?.focus()
+  }, [])
+  const { open, toggle, close } = useMobileMenu(restoreTrigger)
 
   useEffect(() => {
     const desktop = window.matchMedia("(min-width: 640px)")
@@ -67,12 +71,6 @@ export function HeaderMenu() {
     panel?.querySelector<HTMLElement>("a, button")?.focus()
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setInstant(true)
-        close()
-        triggerRef.current?.focus()
-        return
-      }
       if (event.key !== "Tab" || !panel) return
 
       const focusables = panel.querySelectorAll<HTMLElement>(
@@ -105,7 +103,7 @@ export function HeaderMenu() {
         {/* SiteLogo renders its own <a href="/"> — do not wrap it in
             another anchor (nested <a> is invalid HTML and breaks
             hydration for the whole route). */}
-        <div className="flex h-5 items-center sm:h-6">
+        <div className="flex h-5 min-w-0 flex-1 items-center overflow-hidden sm:h-6">
           <SiteLogo variant="landing" />
         </div>
 
@@ -131,7 +129,7 @@ export function HeaderMenu() {
           </li>
         </ul>
 
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-3">
           <OpenAppButton className="hidden sm:inline-flex" />
           <HamburgerButton
             open={open}
