@@ -15,6 +15,7 @@ import { BottomTabs } from "./positions/BottomTabs"
 import { CircuitBreakerBanner } from "./CircuitBreakerBanner"
 import { PanelErrorBoundary } from "./PanelErrorBoundary"
 import { MobileTradeNav, mobileViewClassName, type MobileTradeView } from "./MobileTradeNav"
+import { DepthLadder } from "./orderbook/DepthLadder"
 import { saveReferralCode } from "@/lib/contracts"
 
 const tradeRoute = getRouteApi("/trade")
@@ -107,23 +108,21 @@ export function TradePage() {
               className="hidden md:block"
             />
 
-            {/* Market depth / order book (reference data only — see PR scope note) */}
+            {/* Bid/ask depth ladder */}
             <aside
               id="mobile-trade-view-book"
+              aria-label="Order book depth"
               className={cn(
                 "min-h-40 w-full flex-col overflow-hidden border-t border-border md:min-h-0 md:w-[var(--book-width)] md:border-t-0 md:border-inline-start lg:min-h-0 lg:w-[var(--book-width)] lg:border-t-0 lg:border-inline-start",
                 mobileViewClassName("book", mobileView)
               )}
               style={{ ["--book-width" as string]: `${bookWidth}px` }}
             >
-              <PanelErrorBoundary panel="market depth">
-                <div className="flex items-center justify-between border-b border-border px-3 py-2">
-                  <h2 className="text-xs font-semibold uppercase tracking-wide">Market depth</h2>
-                  <span className="text-xs text-muted-foreground">Reference data</span>
-                </div>
-                <div className="flex flex-1 items-center justify-center p-4 text-center text-xs text-muted-foreground">
-                  Executable order-book depth is unavailable until a verified matching source is connected.
-                </div>
+              <PanelErrorBoundary panel="order book depth">
+                <DepthLadder
+                  symbol={trade.toTokenAddress}
+                  compact={bookWidth < 280}
+                />
               </PanelErrorBoundary>
             </aside>
           </div>
