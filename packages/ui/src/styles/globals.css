@@ -194,6 +194,31 @@
     --gutter-page-sm: 1rem;          /* 16px — mobile */
     --gutter-page-md: 1.5rem;        /* 24px — tablet */
     --gutter-page-lg: 2rem;          /* 32px — desktop */
+
+    /*
+     * Motion duration tokens (OB-011 motion design system).
+     *
+     * Duration scale from restrained (feedback) to expressive (landing).
+     * Prefer shorter durations for trading UI; use longer for landing motion.
+     */
+    --duration-fast: 100ms;          /* Feedback: selection, status changes */
+    --duration-base: 150ms;          /* Standard: transitions, overlays */
+    --duration-moderate: 200ms;      /* Emphasis: section reveals, expansions */
+    --duration-slow: 300ms;          /* Landing: hero motion, marquees */
+    --duration-slowest: 400ms;       /* Landing: extended sequences */
+
+    /*
+     * Motion easing tokens — consistent timing functions across the UI.
+     *
+     * - in-out: default for most interactions (symmetrical acceleration/deceleration)
+     * - out: entry animations (quick to final position)
+     * - in: exit animations (slowing into rest)
+     * - bounce: playful emphasis for non-critical feedback
+     */
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 /*
@@ -360,6 +385,22 @@
     &::-webkit-scrollbar {
         display: none;
     }
+}
+/* Motion transition utilities (OB-011). Named transitions for consistent state feedback. */
+@utility transition-opacity {
+    transition-property: opacity;
+    transition-duration: var(--duration-base);
+    transition-timing-function: var(--ease-in-out);
+}
+@utility transition-transform {
+    transition-property: transform;
+    transition-duration: var(--duration-base);
+    transition-timing-function: var(--ease-in-out);
+}
+@utility transition-all-subtle {
+    transition-property: color, background-color, border-color, opacity;
+    transition-duration: var(--duration-base);
+    transition-timing-function: var(--ease-in-out);
 }
 :root {
     --background: oklch(1 0 0);
